@@ -145,17 +145,15 @@ def render_translation_interface(user_type_label: str):
                 audio_hash = str(hash(audio_bytes))
                 processed_flag_key = f"processed_audio_hash_{user_type_label}"
 
-                col_mic_audio, col_mic_action = st.columns([2, 1])
-                with col_mic_audio:
-                    st.audio(voice_recording, format="audio/wav")
-                with col_mic_action:
-                    manual_retrans = st.button("🔄 Transcribe & Translate", key=f"retrans_btn_{user_type_label}", use_container_width=True)
-
                 is_new_speech = (st.session_state.get(processed_flag_key) != audio_hash)
+                manual_retrans = False
+
+                if not is_new_speech:
+                    manual_retrans = st.button("🔄 Re-Translate Spoken Voice", key=f"retrans_btn_{user_type_label}", use_container_width=True)
 
                 if is_new_speech or manual_retrans:
                     st.session_state[processed_flag_key] = audio_hash
-                    with st.spinner(f"Transcribing voice speech in {src_lang}..."):
+                    with st.spinner(f"Converting {src_lang} voice to text and translating..."):
                         recognizer = sr.Recognizer()
                         try:
                             with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
@@ -163,7 +161,7 @@ def render_translation_interface(user_type_label: str):
                                 stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
                                 spoken = recognizer.recognize_google(audio_data, language=stt_code)
                                 st.session_state[f"last_spoken_{user_type_label}"] = spoken
-                                st.success(f"🎙️ Recognized Speech: **{spoken}**")
+                                st.success(f"🎙️ Recognized Voice: **{spoken}**")
                                 run_translation(spoken)
                         except sr.UnknownValueError:
                             st.warning("Could not understand the audio. Please speak clearly into your mic and try again.")
@@ -235,7 +233,7 @@ def render_translation_interface(user_type_label: str):
             )
             if uploaded_audio:
                 st.audio(uploaded_audio)
-                if st.button("Transcribe & Translate Audio Clip", key=f"file_btn_{user_type_label}", use_container_width=True):
+                if st.button("🚀 Translate Audio Clip", key=f"file_btn_{user_type_label}", use_container_width=True):
                     with st.spinner("Processing audio with acoustic recognizer..."):
                         recognizer = sr.Recognizer()
                         try:

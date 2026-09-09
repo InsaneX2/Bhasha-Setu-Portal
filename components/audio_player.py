@@ -9,15 +9,9 @@ import streamlit.components.v1 as components
 
 
 def render_audio_player(audio_b64: str, mime_type: str = "audio/wav"):
-    """Render native audio player alongside interactive animated equalizer."""
+    """Render interactive animated equalizer audio player without default HTML players."""
     if not audio_b64:
         return
-
-    # Standard fallback stream
-    try:
-        st.audio(data=base64.b64decode(audio_b64), format=mime_type)
-    except Exception:
-        pass
 
     # Custom animated equalizer widget
     unique_id = f"aud_{int(time.time() * 1000)}"
