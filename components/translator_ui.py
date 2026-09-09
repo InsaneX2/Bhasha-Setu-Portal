@@ -16,19 +16,20 @@ from config import (
 from services.bhashini import run_bhashini_pipeline_smart
 from services.adivaani import get_tribal_translation
 from services.telemetry import log_activity
+from services.i18n import t
 from components.audio_player import render_audio_player
 
 
 def render_translation_interface(user_type_label: str):
     """Render the full vernacular learning assistant interface."""
-    st.markdown("### 🗣️ Vernacular Learning Assistant")
-    st.caption(f"Real-time speech-to-speech classroom translator active in **{user_type_label} Mode**")
+    st.markdown(f"### {t('asst_title')}")
+    st.caption(f"{t('asst_sub')} **{user_type_label} Mode**")
 
     # 1. Language Selection Row
     col1, col2 = st.columns(2)
     with col1:
         src_lang = st.selectbox(
-            "Source Language",
+            t("src_lang_label"),
             ALL_LANGUAGES,
             index=0,
             key=f"src_{user_type_label}"
@@ -36,14 +37,14 @@ def render_translation_interface(user_type_label: str):
     with col2:
         default_target_idx = ALL_LANGUAGES.index("Hindi") if "Hindi" in ALL_LANGUAGES else 1
         target_lang = st.selectbox(
-            "Target Vernacular Dialect",
+            t("tgt_lang_label"),
             ALL_LANGUAGES,
             index=default_target_idx,
             key=f"tgt_{user_type_label}"
         )
 
     # 2. Preset Prompt Chips for Quick Demo
-    st.markdown("<div style='margin-top: 10px; margin-bottom: 6px; font-size: 0.85rem; color: #94a3b8;'>💡 <b>Quick Classroom Prompts:</b></div>", unsafe_allow_html=True)
+    st.markdown(f"<div style='margin-top: 10px; margin-bottom: 6px; font-size: 0.85rem; color: #94a3b8;'>{t('quick_prompts')}</div>", unsafe_allow_html=True)
     p_cols = st.columns(4)
     selected_preset = None
 
@@ -65,7 +66,7 @@ def render_translation_interface(user_type_label: str):
         mime_type = "audio/wav"
         translated_output = ""
 
-        with st.spinner(f"Routing through institutional neural pipeline for {target_lang}..."):
+        with st.spinner(f"Translating to {target_lang}..."):
             # Scenario A: Target is an indigenous tribal dialect
             if is_target_tribal:
                 tgt_c = TRIBAL_LANG_CODES[target_lang]
@@ -107,7 +108,7 @@ def render_translation_interface(user_type_label: str):
 
         # Output Presentation Container
         with st.container(border=True):
-            st.markdown(f"#### 🌐 Translation Output ({target_lang})")
+            st.markdown(f"#### {t('output_title')} ({target_lang})")
             st.markdown(
                 f"<div style='font-size: 1.25rem; font-weight: 600; color: #38bdf8; padding: 8px 0;'>"
                 f"{translated_output}</div>",
@@ -124,19 +125,19 @@ def render_translation_interface(user_type_label: str):
 
     # 4. Input Controls: Voice, Text, and Audio Upload
     input_tab_voice, input_tab_text, input_tab_file = st.tabs([
-        "🎙️ Microphone Voice Input",
-        "📝 Text & Concept Query",
-        "📁 Audio File Upload (WAV / MP3)"
+        t("tab_mic_input"),
+        t("tab_text_input"),
+        t("tab_file_input")
     ])
 
     with input_tab_voice:
         with st.container(border=True):
-            st.markdown("#### 🎙️ Live Classroom Microphone")
-            st.caption(f"Browser WebAudio Capture (Cloud & Deployment Ready) • Configured for: **{src_lang}** ({STT_LANG_CODES.get(src_lang, 'en-IN')})")
+            st.markdown(f"#### {t('mic_head')}")
+            st.caption(f"{t('mic_sub')} • Configured for: **{src_lang}** ({STT_LANG_CODES.get(src_lang, 'en-IN')})")
 
             # Native browser microphone input (works seamlessly in Streamlit Cloud, Mobile, and Desktop browsers)
             voice_recording = st.audio_input(
-                "Click the mic button below to record your voice:",
+                t("mic_record_prompt"),
                 key=f"browser_mic_{user_type_label}"
             )
 
@@ -149,26 +150,25 @@ def render_translation_interface(user_type_label: str):
                 manual_retrans = False
 
                 if not is_new_speech:
-                    manual_retrans = st.button("🔄 Re-Translate Spoken Voice", key=f"retrans_btn_{user_type_label}", use_container_width=True)
+                    manual_retrans = st.button(t("btn_retranslate"), key=f"retrans_btn_{user_type_label}", use_container_width=True)
 
                 if is_new_speech or manual_retrans:
                     st.session_state[processed_flag_key] = audio_hash
-                    with st.spinner(f"Converting {src_lang} voice to text and translating..."):
-                        recognizer = sr.Recognizer()
-                        try:
-                            with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
-                                audio_data = recognizer.record(source)
-                                stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
-                                spoken = recognizer.recognize_google(audio_data, language=stt_code)
-                                st.session_state[f"last_spoken_{user_type_label}"] = spoken
-                                st.success(f"🎙️ Recognized Voice: **{spoken}**")
-                                run_translation(spoken)
-                        except sr.UnknownValueError:
-                            st.warning("Could not understand the audio. Please speak clearly into your mic and try again.")
-                        except sr.RequestError as e:
-                            st.error(f"Speech recognition service error: {e}")
-                        except Exception as e:
-                            st.error(f"Audio processing error: {e}")
+                    recognizer = sr.Recognizer()
+                    try:
+                        with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
+                            audio_data = recognizer.record(source)
+                            stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
+                            spoken = recognizer.recognize_google(audio_data, language=stt_code)
+                            st.session_state[f"last_spoken_{user_type_label}"] = spoken
+                            st.success(f"{t('recognized_voice')} **{spoken}**")
+                            run_translation(spoken)
+                    except sr.UnknownValueError:
+                        st.warning("Could not understand the audio. Please speak clearly into your mic and try again.")
+                    except sr.RequestError as e:
+                        st.error(f"Speech recognition service error: {e}")
+                    except Exception as e:
+                        st.error(f"Audio processing error: {e}")
                 elif f"last_spoken_{user_type_label}" in st.session_state:
                     st.info(f"🎙️ Current Speech: **{st.session_state[f'last_spoken_{user_type_label}']}**")
 
@@ -193,7 +193,7 @@ def render_translation_interface(user_type_label: str):
                             stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
                             spoken = recognizer.recognize_google(audio, language=stt_code)
                             st.session_state[f"last_spoken_{user_type_label}"] = spoken
-                            st.success(f"Recognized Speech: **{spoken}**")
+                            st.success(f"{t('recognized_voice')} **{spoken}**")
                             run_translation(spoken)
                     except sr.WaitTimeoutError:
                         status_placeholder.empty()
@@ -207,8 +207,8 @@ def render_translation_interface(user_type_label: str):
 
     with input_tab_text:
         with st.container(border=True):
-            st.markdown("#### 📝 Text Input & Concept Query")
-            st.caption("Type any lecture note, STEM formula explanation, or student doubt")
+            st.markdown(f"#### {t('text_input_head')}")
+            st.caption(t("text_input_sub"))
 
             default_val = selected_preset if selected_preset else ""
             typed_query = st.text_input(
@@ -218,12 +218,12 @@ def render_translation_interface(user_type_label: str):
                 placeholder="e.g., Photosynthesis is the process by which plants make food..."
             )
 
-            if st.button("🚀 Translate & Synthesize", key=f"trans_btn_{user_type_label}", use_container_width=True):
+            if st.button(t("btn_translate_synth"), key=f"trans_btn_{user_type_label}", use_container_width=True):
                 run_translation(typed_query)
 
     with input_tab_file:
         with st.container(border=True):
-            st.markdown("#### 📁 Audio File Upload & Transcription")
+            st.markdown(f"#### {t('file_input_head')}")
             st.caption("Upload recorded lecture snippets or oral student responses (WAV, MP3, M4A)")
 
             uploaded_audio = st.file_uploader(
@@ -233,7 +233,7 @@ def render_translation_interface(user_type_label: str):
             )
             if uploaded_audio:
                 st.audio(uploaded_audio)
-                if st.button("🚀 Translate Audio Clip", key=f"file_btn_{user_type_label}", use_container_width=True):
+                if st.button(t("btn_translate_clip"), key=f"file_btn_{user_type_label}", use_container_width=True):
                     with st.spinner("Processing audio with acoustic recognizer..."):
                         recognizer = sr.Recognizer()
                         try:

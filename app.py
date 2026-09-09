@@ -7,6 +7,7 @@ import os
 import streamlit as st
 from config import PROJECT_NAME, EDITION
 from services.telemetry import init_telemetry
+from services.i18n import t, get_available_ui_languages
 from views.home import render_home_view
 from views.portal import render_portal_view
 from views.faq import render_faq_view
@@ -40,15 +41,18 @@ if "authenticated" not in st.session_state:
     st.session_state.user_role = None
     st.session_state.username = None
 
-if "nav_page" not in st.session_state:
-    st.session_state.nav_page = "🏠 Home & Overview"
+if "portal_ui_language" not in st.session_state:
+    st.session_state.portal_ui_language = "English (Default)"
+
+if "nav_page_idx" not in st.session_state:
+    st.session_state.nav_page_idx = 0
 
 init_telemetry()
 
 # ----------------------------------------------------
 # 3. Top Navigation Header 🧭
 # ----------------------------------------------------
-top_bar_c1, top_bar_c2 = st.columns([3, 1])
+top_bar_c1, top_bar_c2 = st.columns([1.9, 2.1])
 
 with top_bar_c1:
     st.markdown(f"""
@@ -59,49 +63,61 @@ with top_bar_c1:
                     {PROJECT_NAME}
                 </div>
                 <div style='font-size: 0.82rem; color: #94a3b8; font-weight: 500;'>
-                    AI-Driven Vernacular Pedagogy & Classroom Learning Management System
+                    {t('top_subtitle')}
                 </div>
             </div>
         </div>
     """, unsafe_allow_html=True)
 
 with top_bar_c2:
-    if st.session_state.authenticated:
-        st.markdown(f"""
-            <div style='text-align: right;'>
-                <span class='status-badge-live'><span class='status-dot'></span> {st.session_state.user_role} Session</span>
-                <div style='font-size: 0.8rem; color: #94a3b8;'>User: <b>{st.session_state.username}</b></div>
-            </div>
-        """, unsafe_allow_html=True)
-        if st.button("🚪 Sign Out", key="top_logout"):
-            st.session_state.authenticated = False
-            st.session_state.user_role = None
-            st.session_state.username = None
-            st.session_state.nav_page = "🎓 Classroom Portal"
-            st.rerun()
-    else:
-        st.markdown(f"""
-            <div style='text-align: right; padding-top: 8px;'>
-                <span class='status-badge-live'><span class='status-dot'></span> {EDITION} Portal Live</span>
-            </div>
-        """, unsafe_allow_html=True)
+    lang_col, user_col = st.columns([1.2, 0.8])
+    with lang_col:
+        avail_langs = get_available_ui_languages()
+        cur_lang_idx = avail_langs.index(st.session_state.portal_ui_language) if st.session_state.portal_ui_language in avail_langs else 0
+        selected_lang = st.selectbox(
+            "🌐 UI Language",
+            avail_langs,
+            index=cur_lang_idx,
+            key="portal_ui_language",
+            help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
+        )
+    with user_col:
+        if st.session_state.authenticated:
+            st.markdown(f"""
+                <div style='text-align: right; padding-top: 4px;'>
+                    <span class='status-badge-live'><span class='status-dot'></span> {st.session_state.user_role}</span>
+                    <div style='font-size: 0.78rem; color: #94a3b8;'>User: <b>{st.session_state.username}</b></div>
+                </div>
+            """, unsafe_allow_html=True)
+            if st.button(t("sign_out"), key="top_logout", use_container_width=True):
+                st.session_state.authenticated = False
+                st.session_state.user_role = None
+                st.session_state.username = None
+                st.session_state.nav_page_idx = 1
+                st.rerun()
+        else:
+            st.markdown(f"""
+                <div style='text-align: right; padding-top: 10px;'>
+                    <span class='status-badge-live'><span class='status-dot'></span> {t('portal_live')}</span>
+                </div>
+            """, unsafe_allow_html=True)
 
-# Navigation Menu (Tab-based switcher matching design)
-nav_options = [
-    "🏠 Home & Overview",
-    "🎓 Classroom Portal",
-    "❓ FAQ & Documentation",
-    "🏛️ Contact & Institutions"
+# Navigation Menu (Tab-based switcher with full vernacular localization)
+nav_labels = [
+    t("nav_home"),
+    t("nav_portal"),
+    t("nav_faq"),
+    t("nav_contact")
 ]
 
-current_nav = st.session_state.get("nav_page", nav_options[0])
-if current_nav not in nav_options:
-    current_nav = nav_options[0]
+default_tab_idx = st.session_state.get("nav_page_idx", 0)
+if default_tab_idx >= len(nav_labels):
+    default_tab_idx = 0
 
 try:
-    tabs = st.tabs(nav_options, default=current_nav, key="main_nav_tabs")
+    tabs = st.tabs(nav_labels, default=nav_labels[default_tab_idx], key=f"main_nav_{st.session_state.portal_ui_language}")
 except TypeError:
-    tabs = st.tabs(nav_options)
+    tabs = st.tabs(nav_labels)
 
 tab_home, tab_portal, tab_faq, tab_contact = tabs
 
@@ -129,11 +145,11 @@ st.markdown(f"""
             <div>
                 <b style='color: #e2e8f0;'>{PROJECT_NAME} Platform</b> • {EDITION}
                 <div style='font-size: 0.78rem; color: #64748b; margin-top: 2px;'>
-                    Empowering vernacular pedagogy across 22 Scheduled Indian languages & 9 indigenous tribal dialects.
+                    {t('footer_empower')}
                 </div>
             </div>
             <div class='footer-links'>
-                <span class='status-badge-live'><span class='status-dot'></span> All 4 Institutional AI Pipelines Operational</span>
+                <span class='status-badge-live'><span class='status-dot'></span> {t('footer_pipelines')}</span>
             </div>
         </div>
     </div>

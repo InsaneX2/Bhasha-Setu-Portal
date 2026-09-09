@@ -5,51 +5,52 @@ Smart India Hackathon 2026 | BhashaSetu
 
 import streamlit as st
 from config import ALL_LANGUAGES, LANG_FAMILIES, TRIBAL_LANG_CODES
+from services.i18n import t
 
 
 def render_home_view():
     """Render the landing home & overview page."""
     # 1. Hero Section
-    st.markdown("""
+    st.markdown(f"""
         <div class='hero-badge'>
-            <span>🚀 Smart India Hackathon 2026</span> • <span>MeitY Bhashini & Adi Vaani Powered</span> • <span>NEP 2020 Aligned</span>
+            <span>{t('hero_badge')}</span>
         </div>
         <div class='hero-title'>
-            Empowering Every Student in Their Mother Tongue
+            {t('hero_title')}
         </div>
         <div class='hero-subtitle'>
-            BhashaSetu bridges language barriers between teachers and students through real-time multilingual speech translation, intelligent neural fallback across 4 premier Indian institutes, and indigenous tribal dialect support.
+            {t('hero_subtitle')}
         </div>
     """, unsafe_allow_html=True)
 
     # 2. Key Stat Cards
     s1, s2, s3, s4 = st.columns(4)
     with s1:
-        st.markdown("""
+        st.markdown(f"""
             <div class='stat-card'>
                 <div class='stat-number'>22+</div>
-                <div class='stat-label'>Scheduled Indian Languages (Bhashini)</div>
+                <div class='stat-label'>{t('stat_lang')}</div>
             </div>
         """, unsafe_allow_html=True)
     with s2:
-        st.markdown("""
+        st.markdown(f"""
             <div class='stat-card'>
                 <div class='stat-number'>9+</div>
-                <div class='stat-label'>Indigenous Tribal Dialects (Adi Vaani)</div>
+                <div class='stat-label'>{t('stat_tribal')}</div>
             </div>
         """, unsafe_allow_html=True)
     with s3:
-        st.markdown("""
+        st.markdown(f"""
             <div class='stat-card'>
                 <div class='stat-number'>4</div>
-                <div class='stat-label'>Premier AI Fallbacks (IIIT, AI4Bharat, IITs)</div>
+                <div class='stat-label'>{t('stat_fallbacks')}</div>
             </div>
         """, unsafe_allow_html=True)
     with s4:
-        st.markdown("""
+        st.markdown(f"""
             <div class='stat-card'>
                 <div class='stat-number'>&lt;500ms</div>
-                <div class='stat-label'>Low-Latency Speech & Telemetry Processing</div>
+                <div class='stat-label'>{t('stat_latency')}</div>
             </div>
         """, unsafe_allow_html=True)
 
@@ -59,17 +60,17 @@ def render_home_view():
     cta1, cta2 = st.columns(2)
     with cta1:
         with st.container(border=True):
-            st.markdown("### 🎓 Launch Classroom Portal")
-            st.write("Instant access for educators and students to conduct live vernacular lectures, record voice queries, and monitor comprehension metrics.")
-            if st.button("Open Portal Workspace ➔", key="cta_portal", use_container_width=True):
-                st.session_state.nav_page = "🎓 Classroom Portal"
+            st.markdown(f"### {t('cta_portal_title')}")
+            st.write(t("cta_portal_desc"))
+            if st.button(t("cta_portal_btn"), key="cta_portal", use_container_width=True):
+                st.session_state.nav_page_idx = 1
                 st.rerun()
     with cta2:
         with st.container(border=True):
-            st.markdown("### 🏛️ NEP 2020 Pedagogical Mandate")
-            st.write("The National Education Policy prioritizes mother-tongue education. BhashaSetu implements this mandate directly in classrooms without burdening teachers.")
-            if st.button("Read Architecture & FAQs ➔", key="cta_faq", use_container_width=True):
-                st.session_state.nav_page = "❓ FAQ & Documentation"
+            st.markdown(f"### {t('cta_nep_title')}")
+            st.write(t("cta_nep_desc"))
+            if st.button(t("cta_nep_btn"), key="cta_faq", use_container_width=True):
+                st.session_state.nav_page_idx = 2
                 st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)
