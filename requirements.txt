@@ -1,0 +1,6 @@
+streamlit
+SpeechRecognition
+pandas
+requests
+gTTS
+toml

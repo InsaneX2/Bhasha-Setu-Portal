@@ -1,0 +1,11 @@
+# Streamlit secrets (contains sensitive API keys)
+.streamlit/secrets.toml
+
+# Python cache & virtual environments
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+venv/
+.venv/
+data/
