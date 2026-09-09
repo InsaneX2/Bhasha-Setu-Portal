@@ -52,17 +52,17 @@ init_telemetry()
 # ----------------------------------------------------
 # 3. Top Navigation Header 🧭
 # ----------------------------------------------------
-top_bar_c1, top_bar_c2 = st.columns([1.9, 2.1])
+top_bar_c1, top_bar_c2 = st.columns([2.3, 1.2])
 
 with top_bar_c1:
     st.markdown(f"""
         <div style='display: flex; align-items: center; gap: 12px;'>
             <div style='font-size: 2.2rem;'>🎓</div>
             <div>
-                <div style='font-size: 1.6rem; font-weight: 800; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent;'>
+                <div style='font-size: 1.6rem; font-weight: 800; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.25;'>
                     {PROJECT_NAME}
                 </div>
-                <div style='font-size: 0.82rem; color: #94a3b8; font-weight: 500;'>
+                <div style='font-size: 0.82rem; color: #94a3b8; font-weight: 500; line-height: 1.3;'>
                     {t('top_subtitle')}
                 </div>
             </div>
@@ -70,37 +70,38 @@ with top_bar_c1:
     """, unsafe_allow_html=True)
 
 with top_bar_c2:
-    lang_col, user_col = st.columns([1.2, 0.8])
-    with lang_col:
-        avail_langs = get_available_ui_languages()
-        cur_lang_idx = avail_langs.index(st.session_state.portal_ui_language) if st.session_state.portal_ui_language in avail_langs else 0
-        selected_lang = st.selectbox(
-            "🌐 UI Language",
-            avail_langs,
-            index=cur_lang_idx,
-            key="portal_ui_language",
-            help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
-        )
-    with user_col:
-        if st.session_state.authenticated:
+    avail_langs = get_available_ui_languages()
+    cur_lang_idx = avail_langs.index(st.session_state.portal_ui_language) if st.session_state.portal_ui_language in avail_langs else 0
+    selected_lang = st.selectbox(
+        "🌐 UI Language",
+        avail_langs,
+        index=cur_lang_idx,
+        key="portal_ui_language",
+        label_visibility="collapsed",
+        help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
+    )
+    if st.session_state.authenticated:
+        c_user, c_out = st.columns([1.1, 0.9])
+        with c_user:
             st.markdown(f"""
-                <div style='text-align: right; padding-top: 4px;'>
+                <div style='text-align: right; padding-top: 6px;'>
                     <span class='status-badge-live'><span class='status-dot'></span> {st.session_state.user_role}</span>
-                    <div style='font-size: 0.78rem; color: #94a3b8;'>User: <b>{st.session_state.username}</b></div>
+                    <div style='font-size: 0.76rem; color: #94a3b8;'>User: <b>{st.session_state.username}</b></div>
                 </div>
             """, unsafe_allow_html=True)
+        with c_out:
             if st.button(t("sign_out"), key="top_logout", use_container_width=True):
                 st.session_state.authenticated = False
                 st.session_state.user_role = None
                 st.session_state.username = None
                 st.session_state.nav_page_idx = 1
                 st.rerun()
-        else:
-            st.markdown(f"""
-                <div style='text-align: right; padding-top: 10px;'>
-                    <span class='status-badge-live'><span class='status-dot'></span> {t('portal_live')}</span>
-                </div>
-            """, unsafe_allow_html=True)
+    else:
+        st.markdown(f"""
+            <div style='text-align: right; margin-top: 4px;'>
+                <span class='status-badge-live'><span class='status-dot'></span> {EDITION} {t('portal_live')}</span>
+            </div>
+        """, unsafe_allow_html=True)
 
 # Navigation Menu (Tab-based switcher with full vernacular localization)
 nav_labels = [

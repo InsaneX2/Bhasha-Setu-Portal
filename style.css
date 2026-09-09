@@ -2,7 +2,7 @@
    BhashaSetu — Modern Glassmorphism & Cyber-Pedagogy Theme 🎓
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
 /* Root Variables */
 :root {
@@ -36,14 +36,15 @@
                 radial-gradient(circle at 85% 25%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
                 radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
                 linear-gradient(180deg, #070a10 0%, #0d121d 100%);
-    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-main);
 }
 
 /* Typography Overrides */
 h1, h2, h3, h4, h5, h6 {
-    font-family: 'Plus Jakarta Sans', sans-serif !important;
-    letter-spacing: -0.02em;
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', sans-serif !important;
+    letter-spacing: normal;
+    line-height: 1.35 !important;
 }
 
 /* Hero Badge */
@@ -51,31 +52,37 @@ h1, h2, h3, h4, h5, h6 {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 6px 14px;
+    padding: 6px 16px;
     border-radius: 9999px;
     background: rgba(56, 189, 248, 0.1);
     border: 1px solid rgba(56, 189, 248, 0.25);
     color: #7dd3fc;
     font-size: 0.85rem;
     font-weight: 600;
-    margin-bottom: 12px;
+    margin-bottom: 18px;
+    line-height: 1.45;
+    max-width: 100%;
 }
 
 .hero-title {
-    font-size: 2.8rem;
+    font-size: clamp(1.9rem, 3.4vw, 2.75rem);
     font-weight: 800;
-    line-height: 1.15;
+    line-height: 1.38 !important;
     background: linear-gradient(135deg, #ffffff 0%, #e2e8f0 40%, #38bdf8 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    margin-bottom: 8px;
+    padding-top: 4px;
+    margin-top: 6px;
+    margin-bottom: 14px;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }
 
 .hero-subtitle {
-    font-size: 1.15rem;
+    font-size: clamp(0.95rem, 1.3vw, 1.15rem);
     color: var(--text-muted);
     max-width: 850px;
-    line-height: 1.6;
+    line-height: 1.65;
     margin-bottom: 24px;
 }
 
@@ -187,24 +194,155 @@ div.stButton > button:hover {
     margin-bottom: 8px;
 }
 
+/* Universal Dark Mode & High-Contrast Typography */
+.stMarkdown, 
+.stMarkdown p, 
+.stMarkdown span,
+.stMarkdown li,
+[data-testid="stMarkdownContainer"] p,
+[data-testid="stMarkdownContainer"] span,
+[data-testid="stMarkdownContainer"] li {
+    color: #e2e8f0 !important;
+    line-height: 1.6;
+}
+
+label[data-testid="stWidgetLabel"],
+label[data-testid="stWidgetLabel"] p,
+[data-testid="stWidgetLabel"] span {
+    color: #f1f5f9 !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stCaptionContainer"],
+[data-testid="stCaptionContainer"] p,
+small.stCaption {
+    color: #94a3b8 !important;
+    line-height: 1.45;
+}
+
+/* Radio & Checkbox Labels */
+[data-testid="stRadio"] label,
+[data-testid="stRadio"] label span,
+[data-testid="stRadio"] label div {
+    color: #e2e8f0 !important;
+}
+
+/* Metrics Overrides */
+[data-testid="stMetricValue"] {
+    color: #f8fafc !important;
+    font-weight: 800 !important;
+}
+
+[data-testid="stMetricLabel"],
+[data-testid="stMetricLabel"] p {
+    color: #94a3b8 !important;
+    font-size: 0.85rem !important;
+}
+
 /* Input Overrides */
-div[data-baseweb="input"] {
-    background-color: rgba(15, 23, 42, 0.8) !important;
+div[data-baseweb="input"],
+div[data-baseweb="base-input"] {
+    background-color: rgba(15, 23, 42, 0.85) !important;
     border: 1px solid var(--border-subtle) !important;
     border-radius: var(--radius-sm) !important;
     transition: border-color 0.2s ease;
 }
 
-div[data-baseweb="input"]:focus-within {
+div[data-baseweb="input"] input,
+div[data-baseweb="base-input"] input,
+div[data-baseweb="textarea"] textarea {
+    color: #f8fafc !important;
+    -webkit-text-fill-color: #f8fafc !important;
+    background-color: transparent !important;
+}
+
+div[data-baseweb="input"]:focus-within,
+div[data-baseweb="base-input"]:focus-within {
     border-color: var(--primary) !important;
     box-shadow: 0 0 0 2px var(--primary-glow) !important;
 }
 
-/* Selectbox Overrides */
+/* Selectbox & Dropdowns */
 div[data-baseweb="select"] > div {
-    background-color: rgba(15, 23, 42, 0.8) !important;
+    background-color: rgba(15, 23, 42, 0.85) !important;
     border: 1px solid var(--border-subtle) !important;
     border-radius: var(--radius-sm) !important;
+}
+
+div[data-baseweb="select"] span,
+div[data-baseweb="select"] div {
+    color: #f8fafc !important;
+}
+
+div[data-baseweb="select"] svg {
+    fill: #94a3b8 !important;
+}
+
+/* Dropdown Popup Menu Portal */
+div[data-baseweb="popover"],
+div[data-baseweb="popover"] > div,
+ul[role="listbox"] {
+    background-color: #0f172a !important;
+    border: 1px solid rgba(56, 189, 248, 0.3) !important;
+    border-radius: var(--radius-sm) !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.8) !important;
+}
+
+li[role="option"] {
+    background-color: #0f172a !important;
+    color: #e2e8f0 !important;
+    transition: all 0.15s ease;
+}
+
+li[role="option"]:hover,
+li[role="option"][aria-selected="true"] {
+    background-color: #1e293b !important;
+    color: #38bdf8 !important;
+}
+
+/* Expander Overrides (FAQ & Hardware Options) */
+[data-testid="stExpander"] {
+    background: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    border-radius: var(--radius-md) !important;
+    margin-bottom: 12px;
+}
+
+[data-testid="stExpander"] details summary {
+    color: #f1f5f9 !important;
+    font-weight: 600 !important;
+}
+
+[data-testid="stExpander"] details summary:hover {
+    color: #38bdf8 !important;
+}
+
+[data-testid="stExpander"] details summary svg {
+    fill: #38bdf8 !important;
+}
+
+[data-testid="stExpander"] [data-testid="stExpanderDetails"] {
+    color: #cbd5e1 !important;
+}
+
+/* File Uploader Dropzone */
+[data-testid="stFileUploaderDropzone"] {
+    background-color: rgba(15, 23, 42, 0.7) !important;
+    border: 1px dashed rgba(56, 189, 248, 0.35) !important;
+    border-radius: var(--radius-sm) !important;
+}
+
+[data-testid="stFileUploaderDropzone"] span,
+[data-testid="stFileUploaderDropzone"] small {
+    color: #94a3b8 !important;
+}
+
+/* Audio Input Component */
+[data-testid="stAudioInput"] {
+    background-color: rgba(15, 23, 42, 0.75) !important;
+    border: 1px solid rgba(56, 189, 248, 0.25) !important;
+    border-radius: var(--radius-md) !important;
+    padding: 6px 12px !important;
 }
 
 /* Streamlit Tabs */
@@ -214,6 +352,7 @@ div[data-baseweb="select"] > div {
     padding: 6px 8px;
     border-radius: var(--radius-md);
     border: 1px solid var(--border-subtle);
+    flex-wrap: wrap;
 }
 
 .stTabs [data-baseweb="tab"] {

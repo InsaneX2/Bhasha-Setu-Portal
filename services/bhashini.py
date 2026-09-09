@@ -3,6 +3,7 @@ MeitY Bhashini Institutional Pipeline Engine
 Handles multi-directional Indic translation and multi-tier institutional fallbacks.
 """
 
+import base64
 import requests
 import streamlit as st
 from config import PIPELINES
@@ -159,9 +160,16 @@ def run_bhashini_pipeline_smart(text: str, source_lang_code: str, target_lang_co
     for provider_name, pipeline_id in tts_order:
         audio_b64 = execute_bhashini_task("tts", source_lang_code, target_lang_code, translated_text, pipeline_id)
         if audio_b64:
-            break
+            try:
+                raw_bytes = base64.b64decode(audio_b64)
+                if len(raw_bytes) > 2800:
+                    break
+                else:
+                    audio_b64 = None
+            except Exception:
+                audio_b64 = None
 
-    # If Bhashini TTS fails or is unavailable for this dialect, engage high-res fallback TTS
+    # If Bhashini TTS fails, is unavailable, or returns silent dummy audio, engage high-res fallback TTS
     if not audio_b64:
         fallback_b64, fallback_mime = generate_fallback_tts(translated_text, target_lang_code)
         if fallback_b64:

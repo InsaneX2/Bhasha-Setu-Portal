@@ -12,8 +12,10 @@ def render_home_view():
     """Render the landing home & overview page."""
     # 1. Hero Section
     st.markdown(f"""
-        <div class='hero-badge'>
-            <span>{t('hero_badge')}</span>
+        <div style='margin-bottom: 16px; clear: both;'>
+            <div class='hero-badge'>
+                <span>{t('hero_badge')}</span>
+            </div>
         </div>
         <div class='hero-title'>
             {t('hero_title')}

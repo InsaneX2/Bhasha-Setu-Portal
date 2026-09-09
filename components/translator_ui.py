@@ -15,6 +15,7 @@ from config import (
 )
 from services.bhashini import run_bhashini_pipeline_smart
 from services.adivaani import get_tribal_translation
+from services.tts import generate_fallback_tts
 from services.telemetry import log_activity
 from services.i18n import t
 from components.audio_player import render_audio_player
@@ -83,12 +84,17 @@ def render_translation_interface(user_type_label: str):
                     src_c = "hin"
 
                 translated_output = get_tribal_translation(intermediate_text, src_c, tgt_c)
+                if translated_output and not translated_output.startswith("Error") and not translated_output.startswith("Adi Vaani"):
+                    audio_b64_to_play, mime_type = generate_fallback_tts(translated_output, tgt_c)
 
             # Scenario B: Source is tribal dialect, Target is standard language
             elif is_src_tribal:
                 src_c = TRIBAL_LANG_CODES[src_lang]
                 tgt_c = "hin" if target_lang == "Hindi" else "eng"
                 translated_output = get_tribal_translation(input_query, src_c, tgt_c)
+                if translated_output and not translated_output.startswith("Error") and not translated_output.startswith("Adi Vaani"):
+                    tgt_std_code = LANG_CODES.get(target_lang, "hi")
+                    audio_b64_to_play, mime_type = generate_fallback_tts(translated_output, tgt_std_code)
 
             # Scenario C: Multi-Directional Bhashini Translation (Indic-to-Indic, English-to-Indic, Indic-to-English)
             else:
@@ -118,10 +124,7 @@ def render_translation_interface(user_type_label: str):
             if audio_b64_to_play:
                 render_audio_player(audio_b64_to_play, mime_type)
             else:
-                if is_target_tribal:
-                    st.info("🎙️ Native speech synthesis for this indigenous dialect is currently under field training.")
-                else:
-                    st.caption("🎙️ Speech synthesis rendered.")
+                st.caption("🎙️ Voice output unavailable for this query.")
 
     # 4. Input Controls: Voice, Text, and Audio Upload
     input_tab_voice, input_tab_text, input_tab_file = st.tabs([
