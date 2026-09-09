@@ -34,12 +34,14 @@ def render_portal_view():
                         st.session_state.authenticated = True
                         st.session_state.user_role = "Teacher"
                         st.session_state.username = "teacher1"
+                        st.session_state.nav_page = "🎓 Classroom Portal"
                         st.rerun()
                 with demo_c2:
                     if st.button("🎓 Login as Student", key="quick_student", use_container_width=True):
                         st.session_state.authenticated = True
                         st.session_state.user_role = "Student"
                         st.session_state.username = "student1"
+                        st.session_state.nav_page = "🎓 Classroom Portal"
                         st.rerun()
 
                 st.markdown("<hr style='margin: 16px 0; border-color: rgba(255,255,255,0.08);'>", unsafe_allow_html=True)
@@ -53,11 +55,13 @@ def render_portal_view():
                         st.session_state.authenticated = True
                         st.session_state.user_role = "Teacher"
                         st.session_state.username = username_input
+                        st.session_state.nav_page = "🎓 Classroom Portal"
                         st.rerun()
                     elif role == "Student" and username_input == "student1" and password_input == "pass":
                         st.session_state.authenticated = True
                         st.session_state.user_role = "Student"
                         st.session_state.username = username_input
+                        st.session_state.nav_page = "🎓 Classroom Portal"
                         st.rerun()
                     else:
                         st.error("Invalid credentials. Try `teacher1`/`admin` or `student1`/`pass`, or use 1-Click Access above.")

@@ -132,37 +132,80 @@ def render_translation_interface(user_type_label: str):
     with input_tab_voice:
         with st.container(border=True):
             st.markdown("#### 🎙️ Live Classroom Microphone")
-            st.caption(f"Speech recognition configured for: **{src_lang}** ({STT_LANG_CODES.get(src_lang, 'en-IN')})")
+            st.caption(f"Browser WebAudio Capture (Cloud & Deployment Ready) • Configured for: **{src_lang}** ({STT_LANG_CODES.get(src_lang, 'en-IN')})")
 
-            mic_btn = st.button("🔴 Tap to Speak", key=f"mic_btn_{user_type_label}", use_container_width=True)
-            if mic_btn:
-                status_placeholder = st.empty()
-                status_placeholder.markdown("""
-                    <div style='background: linear-gradient(90deg, #dc2626, #ef4444); color: white; border-radius: 8px; padding: 10px 20px; text-align: center; font-weight: 600; margin-bottom: 10px;'>
-                        🎙️ Listening... (Speak clearly into your microphone)
-                    </div>
-                """, unsafe_allow_html=True)
+            # Native browser microphone input (works seamlessly in Streamlit Cloud, Mobile, and Desktop browsers)
+            voice_recording = st.audio_input(
+                "Click the mic button below to record your voice:",
+                key=f"browser_mic_{user_type_label}"
+            )
 
-                recognizer = sr.Recognizer()
-                try:
-                    with sr.Microphone() as source:
-                        recognizer.adjust_for_ambient_noise(source, duration=0.4)
-                        audio = recognizer.listen(source, timeout=5, phrase_time_limit=7)
+            if voice_recording is not None:
+                audio_bytes = voice_recording.getvalue()
+                audio_hash = str(hash(audio_bytes))
+                processed_flag_key = f"processed_audio_hash_{user_type_label}"
+
+                col_mic_audio, col_mic_action = st.columns([2, 1])
+                with col_mic_audio:
+                    st.audio(voice_recording, format="audio/wav")
+                with col_mic_action:
+                    manual_retrans = st.button("🔄 Transcribe & Translate", key=f"retrans_btn_{user_type_label}", use_container_width=True)
+
+                is_new_speech = (st.session_state.get(processed_flag_key) != audio_hash)
+
+                if is_new_speech or manual_retrans:
+                    st.session_state[processed_flag_key] = audio_hash
+                    with st.spinner(f"Transcribing voice speech in {src_lang}..."):
+                        recognizer = sr.Recognizer()
+                        try:
+                            with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
+                                audio_data = recognizer.record(source)
+                                stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
+                                spoken = recognizer.recognize_google(audio_data, language=stt_code)
+                                st.session_state[f"last_spoken_{user_type_label}"] = spoken
+                                st.success(f"🎙️ Recognized Speech: **{spoken}**")
+                                run_translation(spoken)
+                        except sr.UnknownValueError:
+                            st.warning("Could not understand the audio. Please speak clearly into your mic and try again.")
+                        except sr.RequestError as e:
+                            st.error(f"Speech recognition service error: {e}")
+                        except Exception as e:
+                            st.error(f"Audio processing error: {e}")
+                elif f"last_spoken_{user_type_label}" in st.session_state:
+                    st.info(f"🎙️ Current Speech: **{st.session_state[f'last_spoken_{user_type_label}']}**")
+
+            # Local PC Hardware Sound Card Fallback (Only useful for local offline testing)
+            with st.expander("⚙️ Advanced: Local PC Sound Card (Localhost Only)", expanded=False):
+                st.caption("Direct PyAudio hardware capture. Only functions when running Python locally on your machine with a sound card, not in cloud containers.")
+                if st.button("🔴 Local Host Hardware Mic", key=f"local_mic_btn_{user_type_label}", use_container_width=True):
+                    status_placeholder = st.empty()
+                    status_placeholder.markdown("""
+                        <div style='background: linear-gradient(90deg, #dc2626, #ef4444); color: white; border-radius: 8px; padding: 10px 20px; text-align: center; font-weight: 600; margin-bottom: 10px;'>
+                            🎙️ Listening on host hardware... (Speak clearly)
+                        </div>
+                    """, unsafe_allow_html=True)
+
+                    recognizer = sr.Recognizer()
+                    try:
+                        with sr.Microphone() as source:
+                            recognizer.adjust_for_ambient_noise(source, duration=0.4)
+                            audio = recognizer.listen(source, timeout=5, phrase_time_limit=7)
+                            status_placeholder.empty()
+
+                            stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
+                            spoken = recognizer.recognize_google(audio, language=stt_code)
+                            st.session_state[f"last_spoken_{user_type_label}"] = spoken
+                            st.success(f"Recognized Speech: **{spoken}**")
+                            run_translation(spoken)
+                    except sr.WaitTimeoutError:
                         status_placeholder.empty()
-
-                        stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
-                        spoken = recognizer.recognize_google(audio, language=stt_code)
-                        st.success(f"Recognized Speech: **{spoken}**")
-                        run_translation(spoken)
-                except sr.WaitTimeoutError:
-                    status_placeholder.empty()
-                    st.warning("Listening timed out. No speech was detected.")
-                except sr.UnknownValueError:
-                    status_placeholder.empty()
-                    st.warning("Could not understand the audio. Please speak clearly.")
-                except Exception as e:
-                    status_placeholder.empty()
-                    st.error("Microphone hardware was not detected or inaccessible. You can use the **Text Query** or **Audio File Upload** tab above.")
+                        st.warning("Listening timed out. No speech was detected.")
+                    except sr.UnknownValueError:
+                        status_placeholder.empty()
+                        st.warning("Could not understand the audio. Please speak clearly.")
+                    except Exception as e:
+                        status_placeholder.empty()
+                        st.error(f"Host microphone unavailable: {e}. When running on the web, please use the Browser WebAudio mic above.")
 
     with input_tab_text:
         with st.container(border=True):

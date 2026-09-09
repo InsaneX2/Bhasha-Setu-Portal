@@ -77,6 +77,7 @@ with top_bar_c2:
             st.session_state.authenticated = False
             st.session_state.user_role = None
             st.session_state.username = None
+            st.session_state.nav_page = "🎓 Classroom Portal"
             st.rerun()
     else:
         st.markdown(f"""
@@ -85,7 +86,7 @@ with top_bar_c2:
             </div>
         """, unsafe_allow_html=True)
 
-# Navigation Menu
+# Navigation Menu (Tab-based switcher matching design)
 nav_options = [
     "🏠 Home & Overview",
     "🎓 Classroom Portal",
@@ -93,27 +94,30 @@ nav_options = [
     "🏛️ Contact & Institutions"
 ]
 
-selected_page = st.radio(
-    "Navigation",
-    nav_options,
-    index=nav_options.index(st.session_state.nav_page) if st.session_state.nav_page in nav_options else 0,
-    horizontal=True,
-    label_visibility="collapsed"
-)
-st.session_state.nav_page = selected_page
+current_nav = st.session_state.get("nav_page", nav_options[0])
+if current_nav not in nav_options:
+    current_nav = nav_options[0]
 
-st.write("---")
+try:
+    tabs = st.tabs(nav_options, default=current_nav, key="main_nav_tabs")
+except TypeError:
+    tabs = st.tabs(nav_options)
+
+tab_home, tab_portal, tab_faq, tab_contact = tabs
 
 # ----------------------------------------------------
 # 4. View Routing 🔀
 # ----------------------------------------------------
-if st.session_state.nav_page == "🏠 Home & Overview":
+with tab_home:
     render_home_view()
-elif st.session_state.nav_page == "🎓 Classroom Portal":
+
+with tab_portal:
     render_portal_view()
-elif st.session_state.nav_page == "❓ FAQ & Documentation":
+
+with tab_faq:
     render_faq_view()
-elif st.session_state.nav_page == "🏛️ Contact & Institutions":
+
+with tab_contact:
     render_contact_view()
 
 # ----------------------------------------------------
