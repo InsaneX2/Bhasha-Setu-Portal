@@ -33,8 +33,8 @@ def render_faq_view():
     with st.expander("⚡ 4. What is the Multi-Tier Institutional Fallback Engine?"):
         st.write("""
         Classrooms cannot afford server downtime during a live lecture. BhashaSetu implements automatic fallback routing:
-        * **NMT (Text)**: Dynamically routes Indic-to-Indic through **AI4Bharat IndicTrans-v2** $\rightarrow$ **IIIT Hyderabad** $\rightarrow$ **IIT Bombay**.
-        * **TTS (Voice)**: Tries **IIT Madras** $\rightarrow$ **AI4Bharat IndicTTS** $\rightarrow$ **High-Res Acoustic Fallback**.
+        * **NMT (Text)**: Dynamically routes Indic-to-Indic through **AI4Bharat IndicTrans-v2** → **IIIT Hyderabad** → **IIT Bombay**.
+        * **TTS (Voice)**: Tries **IIT Madras** → **AI4Bharat IndicTTS** → **High-Res Acoustic Fallback**.
         If any single university node experiences high traffic or downtime, the query seamlessly shifts to the next node with zero disruption.
         """)
 

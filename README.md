@@ -15,7 +15,7 @@
 
 - **🌐 22 Scheduled Indian Languages**: Integrated via MeitY Digital India Bhashini (ULCA).
 - **🌿 9 Indigenous Tribal Dialects**: Integrated via the Ministry of Tribal Affairs *Adi Vaani* engine (*Santali, Mundari, Bhili, Gondi, Garo, Bettakuruba, Kokborok, Koya, Kui*).
-- **⚡ Multi-Directional Indic Translation**: Seamless routing between regional languages (e.g. Hindi $\leftrightarrow$ Bengali, Marathi $\leftrightarrow$ Tamil) with automatic bridge translation for tribal dialects.
+- **⚡ Multi-Directional Indic Translation**: Seamless routing between regional languages (e.g. Hindi ↔ Bengali, Marathi ↔ Tamil) with automatic bridge translation for tribal dialects.
 - **🛡️ Multi-Tier Institutional Fallback**:
   - **NMT (Text)**: AI4Bharat (IndicTrans-v2) ➔ IIIT Hyderabad ➔ IIT Bombay.
   - **TTS (Voice)**: IIT Madras ➔ AI4Bharat (IndicTTS) ➔ High-Res Acoustic Fallback.
