@@ -515,3 +515,129 @@ textarea:focus-visible,
     font-size: 0.78rem;
     font-weight: 600;
 }
+
+/* ============================================================
+   Brand Logo & Emblem Visual Enhancements 🎨
+   ============================================================ */
+
+/* Top Navbar Logo Thumbnail */
+.navbar-brand-logo {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    border-radius: 12px;
+    padding: 3px;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    box-shadow: 0 4px 16px rgba(56, 189, 248, 0.22);
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.navbar-brand-logo:hover {
+    transform: scale(1.08) rotate(1deg);
+    border-color: rgba(56, 189, 248, 0.7);
+    box-shadow: 0 6px 22px rgba(56, 189, 248, 0.4);
+}
+
+/* Hero Section Logo Emblem Card */
+.hero-logo-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 50% 40%, rgba(56, 189, 248, 0.12) 0%, rgba(17, 24, 39, 0.8) 75%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 26px;
+    padding: 24px 20px;
+    box-shadow: 0 16px 40px -8px rgba(0, 0, 0, 0.65), 0 0 35px rgba(56, 189, 248, 0.16);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    text-align: center;
+}
+
+.hero-logo-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(56, 189, 248, 0.55);
+    box-shadow: 0 24px 55px -10px rgba(0, 0, 0, 0.8), 0 0 45px rgba(56, 189, 248, 0.28);
+}
+
+.hero-logo-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 320px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hero-emblem-img {
+    width: 100%;
+    max-width: 290px;
+    height: auto;
+    object-fit: contain;
+    border-radius: 18px;
+    filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5));
+    transition: transform 0.4s ease;
+}
+
+.hero-emblem-img:hover {
+    transform: scale(1.03);
+}
+
+/* ============================================================
+   Bottom Floating Cookie Consent Overlay (Standard Web Pattern) 🍪
+   ============================================================ */
+div[data-testid="stVerticalBlock"]:has(> div > div > .cookie-overlay-anchor) {
+    position: fixed !important;
+    bottom: 22px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    width: min(94vw, 980px) !important;
+    z-index: 99999999 !important;
+    background: rgba(13, 18, 30, 0.96) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(56, 189, 248, 0.45) !important;
+    border-radius: 20px !important;
+    padding: 16px 24px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 32px rgba(56, 189, 248, 0.22) !important;
+    animation: cookieSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+@keyframes cookieSlideUp {
+    from {
+        opacity: 0;
+        transform: translate(-50%, 50px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+/* Light Mode System Overrides */
+@media (prefers-color-scheme: light) {
+    .navbar-brand-logo {
+        background: rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(56, 189, 248, 0.4);
+        box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+    }
+    .hero-logo-card {
+        background: radial-gradient(circle at 50% 40%, rgba(248, 250, 252, 0.98) 0%, rgba(241, 245, 249, 0.92) 80%);
+        border: 1px solid rgba(56, 189, 248, 0.35);
+        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08), 0 0 20px rgba(56, 189, 248, 0.1);
+    }
+    div[data-testid="stVerticalBlock"]:has(> div > div > .cookie-overlay-anchor) {
+        background: rgba(255, 255, 255, 0.97) !important;
+        border: 1px solid rgba(56, 189, 248, 0.45) !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.15), 0 0 24px rgba(56, 189, 248, 0.12) !important;
+    }
+    div[data-testid="stVerticalBlock"]:has(> div > div > .cookie-overlay-anchor) b {
+        color: #0f172a !important;
+    }
+    div[data-testid="stVerticalBlock"]:has(> div > div > .cookie-overlay-anchor) div {
+        color: #334155 !important;
+    }
+}

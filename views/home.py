@@ -6,24 +6,45 @@ Smart India Hackathon 2026 | BhashaSetu
 import streamlit as st
 from config import ALL_LANGUAGES, LANG_FAMILIES, TRIBAL_LANG_CODES
 from services.i18n import t
+from services.assets import get_logo_base64
 
 
 def render_home_view():
     """Render the landing home & overview page."""
-    # 1. Hero Section
-    st.markdown(f"""
-        <div style='margin-bottom: 16px; clear: both;'>
-            <div class='hero-badge'>
-                <span>{t('hero_badge')}</span>
+    # 1. Hero Section with Brand Logo Showcase
+    hero_c1, hero_c2 = st.columns([1.55, 1.0], gap="large")
+    with hero_c1:
+        st.markdown(f"""
+            <div style='margin-bottom: 16px; clear: both;'>
+                <div class='hero-badge'>
+                    <span>{t('hero_badge')}</span>
+                </div>
             </div>
-        </div>
-        <div class='hero-title'>
-            {t('hero_title')}
-        </div>
-        <div class='hero-subtitle'>
-            {t('hero_subtitle')}
-        </div>
-    """, unsafe_allow_html=True)
+            <div class='hero-title'>
+                {t('hero_title')}
+            </div>
+            <div class='hero-subtitle'>
+                {t('hero_subtitle')}
+            </div>
+        """, unsafe_allow_html=True)
+    with hero_c2:
+        logo_b64 = get_logo_base64("dark_optimized")
+        if logo_b64:
+            st.markdown(f"""
+                <div class='hero-logo-card'>
+                    <div class='hero-logo-wrapper'>
+                        <img src='data:image/png;base64,{logo_b64}' class='hero-emblem-img' alt='BhashaSetu Official Emblem' />
+                    </div>
+                    <div style='margin-top: 12px;'>
+                        <div style='font-size: 0.95rem; font-weight: 700; color: #f8fafc;'>
+                            From Any Lecture To Every Learner
+                        </div>
+                        <div style='font-size: 0.78rem; color: #94a3b8; margin-top: 2px;'>
+                            Breaking Language Barriers & Empowering Tribal Communities
+                        </div>
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
 
     # 2. Key Stat Cards
     s1, s2, s3, s4 = st.columns(4)

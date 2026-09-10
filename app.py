@@ -13,6 +13,7 @@ from views.portal import render_portal_view
 from views.faq import render_faq_view
 from views.contact import render_contact_view
 from views.legal import render_legal_view
+from services.assets import get_logo_base64
 
 # ----------------------------------------------------
 # 1. Page Configuration & Custom CSS 🎨
@@ -59,9 +60,14 @@ init_telemetry()
 top_bar_c1, top_bar_c2 = st.columns([2.3, 1.2])
 
 with top_bar_c1:
+    logo_icon_b64 = get_logo_base64("icon")
+    logo_img_markup = (
+        f"<img src='data:image/png;base64,{logo_icon_b64}' class='navbar-brand-logo' alt='BhashaSetu Official Emblem' />"
+        if logo_icon_b64 else "<div style='font-size: 2.2rem;'>🎓</div>"
+    )
     st.markdown(f"""
-        <div style='display: flex; align-items: center; gap: 12px;'>
-            <div style='font-size: 2.2rem;'>🎓</div>
+        <div style='display: flex; align-items: center; gap: 14px;'>
+            {logo_img_markup}
             <div>
                 <div style='font-size: 1.6rem; font-weight: 800; background: linear-gradient(90deg, #38bdf8, #818cf8); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1.25;'>
                     {PROJECT_NAME}
@@ -107,24 +113,6 @@ with top_bar_c2:
                 <span class='status-badge-live'><span class='status-dot'></span> {EDITION} {t('portal_live')}</span>
             </div>
         """, unsafe_allow_html=True)
-
-# ----------------------------------------------------
-# 3.5 Cookie & Privacy Notice Banner (DPDP Act 2023) 🍪
-# ----------------------------------------------------
-if not st.session_state.cookie_consent_acknowledged:
-    with st.container():
-        c_banner, c_btn = st.columns([4.2, 1.0])
-        with c_banner:
-            st.markdown("""
-                <div class='cookie-banner-text'>
-                    🍪 <b>Privacy & Strictly Necessary Cookies Notice:</b> BhashaSetu processes strictly necessary session tokens for language switching and persona authentication. In compliance with the <b>DPDP Act 2023</b>, voice streams are processed ephemerally in-memory with <b>zero permanent biometric storage</b> and zero third-party marketing trackers.
-                </div>
-            """, unsafe_allow_html=True)
-        with c_btn:
-            if st.button("Accept & Close", key="ack_cookies", use_container_width=True, help="Acknowledge and accept necessary session cookies"):
-                st.session_state.cookie_consent_acknowledged = True
-                st.rerun()
-        st.markdown("<hr style='margin: 6px 0 16px 0; border-color: rgba(56, 189, 248, 0.25);'>", unsafe_allow_html=True)
 
 # Navigation Menu (Tab-based switcher with full vernacular localization)
 nav_labels = [
@@ -223,3 +211,26 @@ with foot_col4:
         st.session_state.legal_subtab_idx = 4
         st.session_state.legal_nav_ver = st.session_state.get("legal_nav_ver", 0) + 1
         st.rerun()
+
+# ----------------------------------------------------
+# 6. Bottom Floating Cookie Consent Overlay (Standard Web Pattern) 🍪
+# ----------------------------------------------------
+if not st.session_state.cookie_consent_acknowledged:
+    with st.container():
+        st.markdown("<div class='cookie-overlay-anchor'></div>", unsafe_allow_html=True)
+        c_text, c_actions = st.columns([3.8, 1.2], gap="medium")
+        with c_text:
+            st.markdown("""
+                <div style='display: flex; align-items: flex-start; gap: 14px;'>
+                    <span style='font-size: 1.6rem; line-height: 1.1;'>🍪</span>
+                    <div style='font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;'>
+                        <b style='color: #f8fafc;'>Privacy & Necessary Cookies Notice:</b>
+                        BhashaSetu processes strictly necessary session tokens for language switching and persona authentication. 
+                        In compliance with India's <b>DPDP Act 2023</b>, voice streams are processed in-memory with <b>zero permanent biometric storage</b> and zero third-party advertising trackers.
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+        with c_actions:
+            if st.button("Accept Necessary", key="ack_cookies_bottom", use_container_width=True, help="Acknowledge and accept necessary session cookies"):
+                st.session_state.cookie_consent_acknowledged = True
+                st.rerun()
