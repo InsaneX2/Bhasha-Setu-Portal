@@ -57,7 +57,7 @@ init_telemetry()
 # ----------------------------------------------------
 # 3. Top Navigation Header 🧭
 # ----------------------------------------------------
-top_bar_c1, top_bar_c2 = st.columns([2.3, 1.2])
+top_bar_c1, top_bar_c2 = st.columns([3.8, 1.2], gap="medium", vertical_alignment="center")
 
 with top_bar_c1:
     logo_icon_b64 = get_logo_base64("icon")
@@ -216,21 +216,130 @@ with foot_col4:
 # 6. Bottom Floating Cookie Consent Overlay (Standard Web Pattern) 🍪
 # ----------------------------------------------------
 if not st.session_state.cookie_consent_acknowledged:
-    with st.container():
-        st.markdown("<div class='cookie-overlay-anchor'></div>", unsafe_allow_html=True)
-        c_text, c_actions = st.columns([3.8, 1.2], gap="medium")
+    with st.container(key="cookie_popup_bar"):
+        st.markdown("""
+            <div class='cookie-overlay-anchor'></div>
+            <style>
+            .st-key-cookie_popup_bar,
+            div[data-testid="stVerticalBlockBorderWrapper"]:has(.cookie-overlay-anchor),
+            div[data-testid="stVerticalBlock"]:has(.cookie-overlay-anchor) {
+                position: fixed !important;
+                bottom: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100vw !important;
+                max-width: 100vw !important;
+                margin: 0 !important;
+                padding: 14px 36px 16px 36px !important;
+                background: #000000 !important;
+                background: rgba(5, 8, 14, 0.98) !important;
+                border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
+                border-left: none !important;
+                border-right: none !important;
+                border-bottom: none !important;
+                border-radius: 0 !important;
+                box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.88) !important;
+                z-index: 999999999 !important;
+                backdrop-filter: blur(16px) !important;
+                -webkit-backdrop-filter: blur(16px) !important;
+            }
+            .st-key-cookie_btn_customise button {
+                background: #0d121d !important;
+                color: #f8fafc !important;
+                border: 1px solid rgba(255, 255, 255, 0.38) !important;
+                border-radius: 6px !important;
+                font-weight: 600 !important;
+                font-size: 0.86rem !important;
+                padding: 6px 12px !important;
+                min-height: 38px !important;
+                transition: all 0.2s ease !important;
+            }
+            .st-key-cookie_btn_customise button:hover {
+                background: rgba(255, 255, 255, 0.12) !important;
+                border-color: rgba(255, 255, 255, 0.7) !important;
+            }
+            .st-key-cookie_btn_reject button {
+                background: #1d4ed8 !important;
+                color: #ffffff !important;
+                border: 1px solid #2563eb !important;
+                border-radius: 6px !important;
+                font-weight: 600 !important;
+                font-size: 0.86rem !important;
+                padding: 6px 12px !important;
+                min-height: 38px !important;
+                transition: all 0.2s ease !important;
+            }
+            .st-key-cookie_btn_reject button:hover {
+                background: #1e40af !important;
+                border-color: #3b82f6 !important;
+            }
+            .st-key-cookie_btn_accept button {
+                background: #2563eb !important;
+                color: #ffffff !important;
+                border: 1px solid #3b82f6 !important;
+                border-radius: 6px !important;
+                font-weight: 600 !important;
+                font-size: 0.86rem !important;
+                padding: 6px 12px !important;
+                min-height: 38px !important;
+                box-shadow: 0 2px 12px rgba(37, 99, 235, 0.4) !important;
+                transition: all 0.2s ease !important;
+            }
+            .st-key-cookie_btn_accept button:hover {
+                background: #1d4ed8 !important;
+                border-color: #60a5fa !important;
+            }
+            @media (prefers-color-scheme: light) {
+                .st-key-cookie_popup_bar,
+                div[data-testid="stVerticalBlockBorderWrapper"]:has(.cookie-overlay-anchor),
+                div[data-testid="stVerticalBlock"]:has(.cookie-overlay-anchor) {
+                    background: rgba(255, 255, 255, 0.98) !important;
+                    border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
+                    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12) !important;
+                }
+                .cookie-popup-title {
+                    color: #0f172a !important;
+                }
+                .cookie-popup-text {
+                    color: #334155 !important;
+                }
+                .st-key-cookie_btn_customise button {
+                    background: #f1f5f9 !important;
+                    color: #0f172a !important;
+                    border-color: #cbd5e1 !important;
+                }
+            }
+            </style>
+        """, unsafe_allow_html=True)
+        c_text, c_actions = st.columns([3.1, 1.4], gap="medium", vertical_alignment="center")
         with c_text:
             st.markdown("""
-                <div style='display: flex; align-items: flex-start; gap: 14px;'>
-                    <span style='font-size: 1.6rem; line-height: 1.1;'>🍪</span>
-                    <div style='font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;'>
-                        <b style='color: #f8fafc;'>Privacy & Necessary Cookies Notice:</b>
-                        BhashaSetu processes strictly necessary session tokens for language switching and persona authentication. 
-                        In compliance with India's <b>DPDP Act 2023</b>, voice streams are processed in-memory with <b>zero permanent biometric storage</b> and zero third-party advertising trackers.
+                <div>
+                    <div class='cookie-popup-title' style='font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 3px;'>
+                        We value your privacy
+                    </div>
+                    <div class='cookie-popup-text' style='font-size: 0.82rem; color: #cbd5e1; line-height: 1.45;'>
+                        We use cookies to enhance your browsing experience, maintain language preferences, and ensure seamless classroom translation. 
+                        By clicking "Accept All", you consent to our use of cookies pursuant to India's <b>DPDP Act 2023</b>. 
+                        Learn more in our educational 
+                        <a href='#cookie-policy' style='color: #60a5fa; text-decoration: underline;' title='Read Cookie Policy'>Cookie Policy</a>.
                     </div>
                 </div>
             """, unsafe_allow_html=True)
         with c_actions:
-            if st.button("Accept Necessary", key="ack_cookies_bottom", use_container_width=True, help="Acknowledge and accept necessary session cookies"):
-                st.session_state.cookie_consent_acknowledged = True
-                st.rerun()
+            b1, b2, b3 = st.columns(3, gap="small", vertical_alignment="center")
+            with b1:
+                if st.button("Customise", key="cookie_btn_customise", use_container_width=True, help="Configure cookie preferences"):
+                    st.session_state.nav_page_idx = 4
+                    st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
+                    st.session_state.legal_subtab_idx = 2
+                    st.session_state.legal_nav_ver = st.session_state.get("legal_nav_ver", 0) + 1
+                    st.rerun()
+            with b2:
+                if st.button("Reject All", key="cookie_btn_reject", use_container_width=True, help="Reject optional tracking tokens"):
+                    st.session_state.cookie_consent_acknowledged = True
+                    st.rerun()
+            with b3:
+                if st.button("Accept All", key="cookie_btn_accept", use_container_width=True, help="Accept all session cookies"):
+                    st.session_state.cookie_consent_acknowledged = True
+                    st.rerun()
