@@ -50,12 +50,13 @@ def render_home_view():
         """, unsafe_allow_html=True)
     with s4:
         st.markdown(f"""
-            <div class='stat-card'>
-                <div class='stat-number'>&lt;500ms</div>
+            <div class='stat-card' title='Average NMT pipeline inference latency under benchmark conditions'>
+                <div class='stat-number'>~500ms*</div>
                 <div class='stat-label'>{t('stat_latency')}</div>
             </div>
         """, unsafe_allow_html=True)
 
+    st.caption("ℹ️ * Latency benchmark based on localized neural model inference cache. End-to-end response times may vary depending on regional network latency and MeitY gateway load.")
     st.markdown("<br>", unsafe_allow_html=True)
 
     # 3. Call to Actions

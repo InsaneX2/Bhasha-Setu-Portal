@@ -99,7 +99,7 @@ PIPELINES = {
 }
 
 # ----------------------------------------------------
-# 3. Project & Institutional Metadata
+# 3. Project, Institutional & Legal Entity Metadata
 # ----------------------------------------------------
 PROJECT_NAME = "BhashaSetu"
 EDITION = "Smart India Hackathon 2026"
@@ -117,6 +117,29 @@ INSTITUTION_DETAILS = {
     "full_address": "Sitamarhi Institute of Technology, Village: Gosainpur, Post Office: Rasulpur, Sitamarhi, Bihar – 843302, India"
 }
 
+# DPDP Act 2023 Statutory Grievance Redressal Officer
+GRIEVANCE_OFFICER = {
+    "name": "Grievance Redressal Officer, BhashaSetu Initiative",
+    "designation": "Data Protection & Grievance Officer",
+    "institution": "Sitamarhi Institute of Technology",
+    "email": "grievance@bhashasetu.gov.in",
+    "address": "Sitamarhi Institute of Technology Campus, Gosainpur, Sitamarhi, Bihar – 843302, India",
+    "turnaround_days": 7
+}
+
+# Legal Entity Disclosures
+LEGAL_ENTITY = {
+    "entity_name": "Team INNOVEXA / Sitamarhi Institute of Technology",
+    "initiative_type": "Educational & Pedagogical Open Innovation Project (Smart India Hackathon 2026)",
+    "jurisdiction": "Sitamarhi / Patna High Court, Bihar, India",
+    "governing_laws": [
+        "Digital Personal Data Protection Act, 2023 (India)",
+        "Information Technology Act, 2000 & SPDI Rules, 2011",
+        "Rights of Persons with Disabilities Act, 2016 (WCAG 2.1 AA Standards)",
+        "Consumer Protection Act, 2019"
+    ]
+}
+
 # Preset Demo Prompts for Quick Testing
 QUICK_CLASSROOM_PROMPTS = [
     "Explain photosynthesis in simple words.",
@@ -124,3 +147,4 @@ QUICK_CLASSROOM_PROMPTS = [
     "Water boils at 100 degrees Celsius.",
     "Who can explain Newton's first law of motion?"
 ]
+

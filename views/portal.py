@@ -12,7 +12,9 @@ from services.telemetry import (
     get_all_logs,
     clear_logs,
     get_logs_dataframe,
-    get_csv_export
+    get_csv_export,
+    is_telemetry_enabled,
+    set_telemetry_enabled
 )
 
 
@@ -105,10 +107,28 @@ def render_portal_view():
                 m1.metric(t("metric_translations"), total_searches)
                 m2.metric(t("metric_students"), unique_students)
                 m3.metric(t("metric_dialects"), len(ALL_LANGUAGES))
-                m4.metric(t("metric_health"), "100% Operational")
+                m4.metric(t("metric_health"), "Active (MeitY & Adi Vaani)")
 
                 with st.container(border=True):
-                    header_col, btn_col1, btn_col2 = st.columns([3, 1, 1])
+                    # Privacy & Data Governance Controls
+                    st.markdown("##### 🛡️ Privacy & Classroom Data Governance (DPDP Act 2023)")
+                    gov_col1, gov_col2 = st.columns([2.2, 1.8])
+                    with gov_col1:
+                        current_telemetry_state = is_telemetry_enabled()
+                        new_telemetry_state = st.toggle(
+                            "Enable Pedagogical Telemetry Logging",
+                            value=current_telemetry_state,
+                            help="When disabled, student queries will not be saved to disk or shown in the activity stream."
+                        )
+                        if new_telemetry_state != current_telemetry_state:
+                            set_telemetry_enabled(new_telemetry_state)
+                            st.rerun()
+                    with gov_col2:
+                        st.caption("🔒 **Right to Erasure:** As a school administrator, you may purge all localized telemetry at any time below.")
+
+                    st.markdown("<hr style='margin: 12px 0; border-color: rgba(255,255,255,0.08);'>", unsafe_allow_html=True)
+
+                    header_col, btn_col1, btn_col2 = st.columns([2.5, 1.2, 1.3])
                     with header_col:
                         st.markdown(f"#### {t('activity_stream')}")
 
@@ -124,8 +144,9 @@ def render_portal_view():
                             )
 
                     with btn_col2:
-                        if st.button(t("btn_clear_logs"), use_container_width=True):
+                        if st.button(f"🗑️ {t('btn_clear_logs')}", use_container_width=True, help="Permanently erase all activity logs (DPDP Right to Erasure)"):
                             clear_logs()
+                            st.success("All activity telemetry erased successfully.")
                             st.rerun()
 
                     if logs:

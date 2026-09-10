@@ -14,6 +14,7 @@ I18N_DICTIONARY = {
         "nav_portal": "🎓 Classroom Portal",
         "nav_faq": "❓ FAQ & Documentation",
         "nav_contact": "🏛️ Contact & Institutions",
+        "nav_legal": "⚖️ Compliance & Legal",
         "top_subtitle": "AI-Driven Vernacular Pedagogy & Classroom Learning Management System",
         "portal_live": "Portal Live",
         "sign_out": "🚪 Sign Out",

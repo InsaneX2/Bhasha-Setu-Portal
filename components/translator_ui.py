@@ -223,7 +223,7 @@ def render_translation_interface(user_type_label: str):
                 placeholder="e.g., Photosynthesis is the process by which plants make food..."
             )
 
-            if st.button(t("btn_translate_synth"), key=f"trans_btn_{user_type_label}", use_container_width=True):
+            if st.button(t("btn_translate_synth"), key=f"trans_btn_{user_type_label}", use_container_width=True, help="Translate typed concept and synthesize spoken audio in the target language"):
                 run_translation(typed_query)
 
     with input_tab_file:
@@ -234,11 +234,12 @@ def render_translation_interface(user_type_label: str):
             uploaded_audio = st.file_uploader(
                 "Select classroom audio or video clip:",
                 type=["wav", "mp3", "m4a", "mp4", "ogg", "flac", "aac", "webm", "mpeg"],
-                key=f"uploader_{user_type_label}"
+                key=f"uploader_{user_type_label}",
+                help="Accepts standard audio recordings and video lecture snippets up to 200MB."
             )
             if uploaded_audio:
                 st.audio(uploaded_audio)
-                if st.button(t("btn_translate_clip"), key=f"file_btn_{user_type_label}", use_container_width=True):
+                if st.button(t("btn_translate_clip"), key=f"file_btn_{user_type_label}", use_container_width=True, help="Transcribe speech in uploaded clip and translate into target vernacular"):
                     status_box = st.empty()
                     status_box.info("Converting audio format & decoding acoustic speech...")
                     try:

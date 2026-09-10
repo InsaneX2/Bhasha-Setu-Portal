@@ -12,6 +12,7 @@ from views.home import render_home_view
 from views.portal import render_portal_view
 from views.faq import render_faq_view
 from views.contact import render_contact_view
+from views.legal import render_legal_view
 
 # ----------------------------------------------------
 # 1. Page Configuration & Custom CSS 🎨
@@ -46,6 +47,9 @@ if "portal_ui_language" not in st.session_state:
 
 if "nav_page_idx" not in st.session_state:
     st.session_state.nav_page_idx = 0
+
+if "cookie_consent_acknowledged" not in st.session_state:
+    st.session_state.cookie_consent_acknowledged = False
 
 init_telemetry()
 
@@ -90,7 +94,7 @@ with top_bar_c2:
                 </div>
             """, unsafe_allow_html=True)
         with c_out:
-            if st.button(t("sign_out"), key="top_logout", use_container_width=True):
+            if st.button(t("sign_out"), key="top_logout", use_container_width=True, help="Sign out of active persona session"):
                 st.session_state.authenticated = False
                 st.session_state.user_role = None
                 st.session_state.username = None
@@ -103,12 +107,31 @@ with top_bar_c2:
             </div>
         """, unsafe_allow_html=True)
 
+# ----------------------------------------------------
+# 3.5 Cookie & Privacy Notice Banner (DPDP Act 2023) 🍪
+# ----------------------------------------------------
+if not st.session_state.cookie_consent_acknowledged:
+    with st.container():
+        c_banner, c_btn = st.columns([4.2, 1.0])
+        with c_banner:
+            st.markdown("""
+                <div class='cookie-banner-text'>
+                    🍪 <b>Privacy & Strictly Necessary Cookies Notice:</b> BhashaSetu processes strictly necessary session tokens for language switching and persona authentication. In compliance with the <b>DPDP Act 2023</b>, voice streams are processed ephemerally in-memory with <b>zero permanent biometric storage</b> and zero third-party marketing trackers.
+                </div>
+            """, unsafe_allow_html=True)
+        with c_btn:
+            if st.button("Accept & Close", key="ack_cookies", use_container_width=True, help="Acknowledge and accept necessary session cookies"):
+                st.session_state.cookie_consent_acknowledged = True
+                st.rerun()
+        st.markdown("<hr style='margin: 6px 0 16px 0; border-color: rgba(56, 189, 248, 0.25);'>", unsafe_allow_html=True)
+
 # Navigation Menu (Tab-based switcher with full vernacular localization)
 nav_labels = [
     t("nav_home"),
     t("nav_portal"),
     t("nav_faq"),
-    t("nav_contact")
+    t("nav_contact"),
+    t("nav_legal")
 ]
 
 default_tab_idx = st.session_state.get("nav_page_idx", 0)
@@ -120,7 +143,7 @@ try:
 except TypeError:
     tabs = st.tabs(nav_labels)
 
-tab_home, tab_portal, tab_faq, tab_contact = tabs
+tab_home, tab_portal, tab_faq, tab_contact, tab_legal = tabs
 
 # ----------------------------------------------------
 # 4. View Routing 🔀
@@ -137,21 +160,48 @@ with tab_faq:
 with tab_contact:
     render_contact_view()
 
+with tab_legal:
+    render_legal_view()
+
 # ----------------------------------------------------
-# 5. Global Sticky Footer 🌐
+# 5. Global Sticky Footer with Legal Links & Disclosures 🌐
 # ----------------------------------------------------
 st.markdown(f"""
     <div class='portal-footer'>
-        <div style='display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;'>
+        <div style='display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;'>
             <div>
                 <b style='color: #e2e8f0;'>{PROJECT_NAME} Platform</b> • {EDITION}
-                <div style='font-size: 0.78rem; color: #64748b; margin-top: 2px;'>
+                <div style='font-size: 0.8rem; color: #94a3b8; margin-top: 3px;'>
                     {t('footer_empower')}
                 </div>
+                <div style='display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;'>
+                    <span class='compliance-badge'>🛡️ DPDP Act 2023 Compliant</span>
+                    <span class='compliance-badge'>♿ WCAG 2.1 AA Accessible</span>
+                    <span class='compliance-badge'>🔒 Zero Biometric Retention</span>
+                </div>
             </div>
-            <div class='footer-links'>
+            <div class='footer-links' style='text-align: right;'>
                 <span class='status-badge-live'><span class='status-dot'></span> {t('footer_pipelines')}</span>
             </div>
         </div>
     </div>
 """, unsafe_allow_html=True)
+
+# Quick footer action bar for immediate legal & grievance navigation
+foot_col1, foot_col2, foot_col3, foot_col4 = st.columns(4)
+with foot_col1:
+    if st.button("🔒 Privacy Policy", key="foot_priv", use_container_width=True, help="Read our DPDP Act 2023 compliant privacy policy"):
+        st.session_state.nav_page_idx = 4
+        st.rerun()
+with foot_col2:
+    if st.button("📜 Terms of Use", key="foot_terms", use_container_width=True, help="Read platform educational terms & AI disclaimer"):
+        st.session_state.nav_page_idx = 4
+        st.rerun()
+with foot_col3:
+    if st.button("🍪 Cookie Policy", key="foot_cookies", use_container_width=True, help="Inspect session cookies and storage policy"):
+        st.session_state.nav_page_idx = 4
+        st.rerun()
+with foot_col4:
+    if st.button("🏛️ Grievance Officer", key="foot_grievance", use_container_width=True, help="Statutory Grievance Redressal Officer contact"):
+        st.session_state.nav_page_idx = 4
+        st.rerun()

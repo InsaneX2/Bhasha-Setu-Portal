@@ -50,15 +50,44 @@ def render_contact_view():
             st.markdown("#### ✉️ School Pilot Request & Feedback")
             st.caption("Interested in piloting BhashaSetu in your regional school or classroom?")
 
-            with st.form("feedback_form"):
-                school_name = st.text_input("School / Institution Name", placeholder="e.g., Kendriya Vidyalaya No. 1")
-                contact_email = st.text_input("Contact Email", placeholder="e.g., principal@school.edu.in")
-                target_region = st.selectbox("Primary State / Dialect Needed", ALL_LANGUAGES, index=0)
-                feedback_notes = st.text_area("Notes or Questions", placeholder="Describe your classroom student language requirements...")
+            with st.form("pilot_request_form"):
+                school_name = st.text_input(
+                    "School / Institution Name *",
+                    placeholder="e.g., Kendriya Vidyalaya No. 1, Ranchi",
+                    help="Official registered name of the educational institution."
+                )
+                contact_email = st.text_input(
+                    "Institutional Contact Email *",
+                    placeholder="e.g., principal@school.edu.in",
+                    help="Official institutional email for pilot onboarding communication."
+                )
+                target_region = st.selectbox(
+                    "Primary Dialect or Regional Language Needed *",
+                    ALL_LANGUAGES,
+                    index=0,
+                    help="Primary student vernacular dialect required for classroom translation."
+                )
+                feedback_notes = st.text_area(
+                    "Classroom Requirements / Project Notes",
+                    placeholder="Describe student demographics, grade levels, and specific pedagogical requirements...",
+                    help="Optional details regarding student cohort size and language needs."
+                )
+
+                # DPDP Act 2023 Statutory Consent Checkbox
+                dpdp_consent = st.checkbox(
+                    "I consent to the collection and processing of the institutional contact information provided above strictly for pilot onboarding and pedagogical review, in accordance with the BhashaSetu Privacy Policy.",
+                    value=False,
+                    help="Mandatory consent pursuant to Section 6 of the Digital Personal Data Protection Act, 2023."
+                )
 
                 submitted = st.form_submit_button("Submit Pilot Application", use_container_width=True)
                 if submitted:
-                    if school_name and contact_email:
-                        st.success(f"Thank you, {school_name}! Your pilot request for {target_region} instruction has been recorded for the {TEAM_NAME} review team.")
+                    if not school_name or not school_name.strip():
+                        st.error("Please enter a valid School or Institution name.")
+                    elif not contact_email or "@" not in contact_email or "." not in contact_email:
+                        st.error("Please provide a valid institutional contact email address.")
+                    elif not dpdp_consent:
+                        st.warning("Consent required: Please acknowledge the DPDP Act privacy consent checkbox above before submitting your application.")
                     else:
-                        st.warning("Please provide your institution name and contact email.")
+                        st.success(f"Thank you, {school_name.strip()}! Your pilot onboarding application for {target_region} instruction has been registered. The {TEAM_NAME} nodal team will contact `{contact_email.strip()}`.")
+

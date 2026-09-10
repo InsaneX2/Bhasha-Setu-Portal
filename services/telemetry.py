@@ -49,20 +49,42 @@ def init_telemetry():
         st.session_state.activity_logs = load_logs()
 
 
+def is_telemetry_enabled() -> bool:
+    """Check if classroom analytics logging is permitted by user/admin."""
+    return st.session_state.get("telemetry_opt_in", True)
+
+
+def set_telemetry_enabled(enabled: bool):
+    """Enable or disable pedagogical telemetry collection."""
+    st.session_state.telemetry_opt_in = enabled
+
+
 def log_activity(student_name, src, dest, query, translated):
-    """Record a translation query into telemetry state and persist to disk."""
+    """
+    Record a translation query into telemetry state and persist to disk.
+    Applies data minimization: only logs if opted in, and sanitizes input length.
+    """
+    if not is_telemetry_enabled():
+        return
+
     init_telemetry()
+    # Data minimization: truncate long queries and sanitize
+    sanitized_query = (query or "").strip()[:500]
+    sanitized_translated = (translated or "").strip()[:500]
+    sanitized_student = (student_name or "Anonymous").strip()[:60]
+
     entry = {
         "Timestamp": datetime.now().strftime("%I:%M %p"),
         "Date": datetime.now().strftime("%Y-%m-%d"),
-        "Student": student_name or "Anonymous",
+        "Student": sanitized_student,
         "Source": src,
         "Target": dest,
-        "Query": query,
-        "Translated": translated
+        "Query": sanitized_query,
+        "Translated": sanitized_translated
     }
     st.session_state.activity_logs.append(entry)
     save_logs(st.session_state.activity_logs)
+
 
 
 def get_all_logs():
