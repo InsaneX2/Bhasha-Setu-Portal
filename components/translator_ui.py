@@ -18,6 +18,7 @@ from services.adivaani import get_tribal_translation
 from services.tts import generate_fallback_tts
 from services.telemetry import log_activity
 from services.i18n import t
+from services.audio_converter import transcribe_audio_file, convert_audio_to_pcm_wav
 from components.audio_player import render_audio_player
 
 
@@ -159,7 +160,8 @@ def render_translation_interface(user_type_label: str):
                     st.session_state[processed_flag_key] = audio_hash
                     recognizer = sr.Recognizer()
                     try:
-                        with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
+                        wav_io = convert_audio_to_pcm_wav(audio_bytes, file_name_hint="mic.wav")
+                        with sr.AudioFile(wav_io) as source:
                             audio_data = recognizer.record(source)
                             stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
                             spoken = recognizer.recognize_google(audio_data, language=stt_code)
@@ -227,29 +229,40 @@ def render_translation_interface(user_type_label: str):
     with input_tab_file:
         with st.container(border=True):
             st.markdown(f"#### {t('file_input_head')}")
-            st.caption("Upload recorded lecture snippets or oral student responses (WAV, MP3, M4A)")
+            st.caption("Upload recorded lecture snippets or oral student responses (MP3, MP4, M4A, WAV, etc.)")
 
             uploaded_audio = st.file_uploader(
-                "Select classroom audio clip:",
-                type=["wav", "mp3", "m4a"],
+                "Select classroom audio or video clip:",
+                type=["wav", "mp3", "m4a", "mp4", "ogg", "flac", "aac", "webm", "mpeg"],
                 key=f"uploader_{user_type_label}"
             )
             if uploaded_audio:
                 st.audio(uploaded_audio)
                 if st.button(t("btn_translate_clip"), key=f"file_btn_{user_type_label}", use_container_width=True):
-                    with st.spinner("Processing audio with acoustic recognizer..."):
-                        recognizer = sr.Recognizer()
-                        try:
-                            # Convert uploaded file bytes into AudioFile
-                            audio_bytes = uploaded_audio.read()
-                            with sr.AudioFile(io.BytesIO(audio_bytes)) as source:
-                                audio_data = recognizer.record(source)
-                                stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
-                                transcribed_text = recognizer.recognize_google(audio_data, language=stt_code)
-                                st.success(f"Transcribed Audio: **{transcribed_text}**")
-                                run_translation(transcribed_text)
-                        except Exception as e:
-                            st.error(f"Audio file decoding failed: {e}. Please ensure the file is an uncompressed WAV or standard MP3.")
+                    status_box = st.empty()
+                    status_box.info("Converting audio format & decoding acoustic speech...")
+                    try:
+                        audio_bytes = uploaded_audio.getvalue()
+                        stt_code = STT_LANG_CODES.get(src_lang, "en-IN")
+
+                        def update_progress(curr, total):
+                            status_box.info(f"Transcribing audio segment {curr} of {total}...")
+
+                        transcribed_text = transcribe_audio_file(
+                            audio_bytes=audio_bytes,
+                            file_name=uploaded_audio.name,
+                            language_code=stt_code,
+                            progress_callback=update_progress
+                        )
+                        status_box.empty()
+                        if transcribed_text and transcribed_text.strip():
+                            st.success(f"Transcribed Audio: **{transcribed_text}**")
+                            run_translation(transcribed_text)
+                        else:
+                            st.warning("Could not recognize clear speech from this audio clip. (Note: Audio with background music or instrumental tracks can be difficult for speech-to-text models to recognize.)")
+                    except Exception as e:
+                        status_box.empty()
+                        st.error(f"Audio processing failed: {e}")
 
     # If preset was selected, trigger translation immediately
     if selected_preset:

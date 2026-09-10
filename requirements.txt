@@ -4,3 +4,5 @@ pandas
 requests
 gTTS
 toml
+imageio-ffmpeg>=0.5.1
+pydub>=0.25.1
