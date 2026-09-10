@@ -24,14 +24,28 @@ def render_legal_view(active_subtab: str = "privacy"):
         f"Terms of Use, and Accessibility commitments for {EDITION}."
     )
 
-    legal_tabs = st.tabs([
+    legal_tab_labels = [
         "🔒 Privacy Policy (DPDP Act)",
         "📜 Terms & Conditions",
         "🍪 Cookie Policy",
         "💳 Refund & Pilot Policy",
         "🏛️ Business & Regulatory Details",
         "♿ Accessibility Statement"
-    ])
+    ]
+
+    legal_ver = st.session_state.get("legal_nav_ver", 0)
+    legal_idx = st.session_state.get("legal_subtab_idx", 0)
+    if legal_idx >= len(legal_tab_labels) or legal_idx < 0:
+        legal_idx = 0
+
+    try:
+        legal_tabs = st.tabs(
+            legal_tab_labels,
+            default=legal_tab_labels[legal_idx],
+            key=f"legal_subtabs_{legal_ver}"
+        )
+    except TypeError:
+        legal_tabs = st.tabs(legal_tab_labels)
 
     tab_privacy, tab_terms, tab_cookies, tab_refund, tab_business, tab_a11y = legal_tabs
 

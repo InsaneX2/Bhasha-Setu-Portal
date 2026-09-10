@@ -67,6 +67,7 @@ def render_home_view():
             st.write(t("cta_portal_desc"))
             if st.button(t("cta_portal_btn"), key="cta_portal", use_container_width=True):
                 st.session_state.nav_page_idx = 1
+                st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
                 st.rerun()
     with cta2:
         with st.container(border=True):
@@ -74,6 +75,7 @@ def render_home_view():
             st.write(t("cta_nep_desc"))
             if st.button(t("cta_nep_btn"), key="cta_faq", use_container_width=True):
                 st.session_state.nav_page_idx = 2
+                st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
                 st.rerun()
 
     st.markdown("<br>", unsafe_allow_html=True)

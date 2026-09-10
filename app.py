@@ -99,6 +99,7 @@ with top_bar_c2:
                 st.session_state.user_role = None
                 st.session_state.username = None
                 st.session_state.nav_page_idx = 1
+                st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
                 st.rerun()
     else:
         st.markdown(f"""
@@ -135,11 +136,16 @@ nav_labels = [
 ]
 
 default_tab_idx = st.session_state.get("nav_page_idx", 0)
-if default_tab_idx >= len(nav_labels):
+if default_tab_idx >= len(nav_labels) or default_tab_idx < 0:
     default_tab_idx = 0
 
+nav_ver = st.session_state.get("nav_ver", 0)
 try:
-    tabs = st.tabs(nav_labels, default=nav_labels[default_tab_idx], key=f"main_nav_{st.session_state.portal_ui_language}")
+    tabs = st.tabs(
+        nav_labels,
+        default=nav_labels[default_tab_idx],
+        key=f"main_nav_{st.session_state.portal_ui_language}_{nav_ver}"
+    )
 except TypeError:
     tabs = st.tabs(nav_labels)
 
@@ -192,16 +198,28 @@ foot_col1, foot_col2, foot_col3, foot_col4 = st.columns(4)
 with foot_col1:
     if st.button("🔒 Privacy Policy", key="foot_priv", use_container_width=True, help="Read our DPDP Act 2023 compliant privacy policy"):
         st.session_state.nav_page_idx = 4
+        st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
+        st.session_state.legal_subtab_idx = 0
+        st.session_state.legal_nav_ver = st.session_state.get("legal_nav_ver", 0) + 1
         st.rerun()
 with foot_col2:
     if st.button("📜 Terms of Use", key="foot_terms", use_container_width=True, help="Read platform educational terms & AI disclaimer"):
         st.session_state.nav_page_idx = 4
+        st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
+        st.session_state.legal_subtab_idx = 1
+        st.session_state.legal_nav_ver = st.session_state.get("legal_nav_ver", 0) + 1
         st.rerun()
 with foot_col3:
     if st.button("🍪 Cookie Policy", key="foot_cookies", use_container_width=True, help="Inspect session cookies and storage policy"):
         st.session_state.nav_page_idx = 4
+        st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
+        st.session_state.legal_subtab_idx = 2
+        st.session_state.legal_nav_ver = st.session_state.get("legal_nav_ver", 0) + 1
         st.rerun()
 with foot_col4:
     if st.button("🏛️ Grievance Officer", key="foot_grievance", use_container_width=True, help="Statutory Grievance Redressal Officer contact"):
         st.session_state.nav_page_idx = 4
+        st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
+        st.session_state.legal_subtab_idx = 4
+        st.session_state.legal_nav_ver = st.session_state.get("legal_nav_ver", 0) + 1
         st.rerun()
