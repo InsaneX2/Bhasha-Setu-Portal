@@ -32,12 +32,138 @@
 
 /* Global App Container */
 .stApp {
-    background: radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
-                radial-gradient(circle at 85% 25%, rgba(56, 189, 248, 0.08) 0%, transparent 45%),
-                radial-gradient(circle at 50% 85%, rgba(16, 185, 129, 0.06) 0%, transparent 50%),
-                linear-gradient(180deg, #070a10 0%, #0d121d 100%);
+    position: relative;
+    background-color: #070a10 !important;
     font-family: 'Plus Jakarta Sans', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif;
     color: var(--text-main);
+    overflow-x: hidden;
+}
+
+[data-testid="stAppViewContainer"] {
+    background: transparent !important;
+}
+
+[data-testid="stHeader"] {
+    background: transparent !important;
+}
+
+.main .block-container {
+    position: relative;
+    z-index: 1;
+}
+
+/* Hide zero-height component iframe */
+iframe[title*="interactive_bg"],
+div:has(> iframe[height="0"]) {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ============================================================
+   Interactive Cyber-Nebula Background (Option 1 + Option 2) 🌌
+   ============================================================ */
+#bhashasetu-ambient-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none !important;
+    z-index: 0;
+    overflow: hidden;
+}
+
+/* 1. Subtle Cyber-Grid Matrix */
+.ambient-grid {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
+        linear-gradient(to right, rgba(56, 189, 248, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(56, 189, 248, 0.02) 1px, transparent 1px);
+    background-size: 32px 32px, 64px 64px, 64px 64px;
+    opacity: 0.75;
+}
+
+/* 2. Interactive Mouse-Following Spotlight (Tracks cursor X & Y) */
+.ambient-spotlight {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        600px circle at var(--mouse-x, 50vw) var(--mouse-y, 35vh),
+        rgba(56, 189, 248, 0.12) 0%,
+        rgba(99, 102, 241, 0.05) 45%,
+        transparent 70%
+    );
+    transition: background 0.06s ease-out;
+    will-change: background;
+}
+
+/* 3. GPU-Accelerated Floating Nebula Orbs (translate3d compositor) */
+.ambient-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(85px);
+    opacity: 0.32;
+    will-change: transform;
+    pointer-events: none;
+}
+
+.ambient-orb.orb-cyan {
+    width: 480px;
+    height: 480px;
+    background: radial-gradient(circle, #38bdf8 0%, rgba(56, 189, 248, 0.25) 55%, transparent 70%);
+    top: 8%;
+    left: 8%;
+    animation: floatOrbCyan 22s ease-in-out infinite alternate;
+}
+
+.ambient-orb.orb-indigo {
+    width: 520px;
+    height: 520px;
+    background: radial-gradient(circle, #6366f1 0%, rgba(99, 102, 241, 0.25) 55%, transparent 70%);
+    bottom: 10%;
+    right: 8%;
+    animation: floatOrbIndigo 26s ease-in-out infinite alternate;
+}
+
+.ambient-orb.orb-emerald {
+    width: 380px;
+    height: 380px;
+    background: radial-gradient(circle, #10b981 0%, rgba(16, 185, 129, 0.2) 55%, transparent 70%);
+    top: 50%;
+    left: 45%;
+    animation: floatOrbEmerald 30s ease-in-out infinite alternate;
+}
+
+@keyframes floatOrbCyan {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(70px, 80px, 0) scale(1.15); }
+    100% { transform: translate3d(-40px, 90px, 0) scale(0.92); }
+}
+
+@keyframes floatOrbIndigo {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(-80px, -60px, 0) scale(1.1); }
+    100% { transform: translate3d(50px, -50px, 0) scale(0.9); }
+}
+
+@keyframes floatOrbEmerald {
+    0%   { transform: translate3d(0, 0, 0) scale(1); }
+    50%  { transform: translate3d(60px, -70px, 0) scale(1.12); }
+    100% { transform: translate3d(-70px, 50px, 0) scale(0.92); }
+}
+
+/* Accessibility: Respect Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    .ambient-orb {
+        animation: none !important;
+    }
+    .ambient-spotlight {
+        transition: none !important;
+    }
 }
 
 /* Typography Overrides */

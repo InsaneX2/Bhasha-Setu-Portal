@@ -14,6 +14,7 @@ from views.faq import render_faq_view
 from views.contact import render_contact_view
 from views.legal import render_legal_view
 from services.assets import get_logo_base64
+from components import inject_interactive_background
 
 # ----------------------------------------------------
 # 1. Page Configuration & Custom CSS 🎨
@@ -34,6 +35,7 @@ def load_css(file_name="style.css"):
 
 
 load_css("style.css")
+inject_interactive_background()
 
 # ----------------------------------------------------
 # 2. Session State & Telemetry Initialization 🗄️
