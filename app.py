@@ -57,7 +57,7 @@ init_telemetry()
 # ----------------------------------------------------
 # 3. Top Navigation Header 🧭
 # ----------------------------------------------------
-top_bar_c1, top_bar_c2 = st.columns([3.8, 1.2], gap="medium", vertical_alignment="center")
+top_bar_c1, top_bar_c2 = st.columns([2.3, 1.2])
 
 with top_bar_c1:
     logo_icon_b64 = get_logo_base64("icon")
@@ -216,36 +216,21 @@ with foot_col4:
 # 6. Bottom Floating Cookie Consent Overlay (Standard Web Pattern) 🍪
 # ----------------------------------------------------
 if not st.session_state.cookie_consent_acknowledged:
-    with st.container(key="cookie_popup_bar"):
-        c_text, c_actions = st.columns([3.1, 1.4], gap="medium", vertical_alignment="center")
+    with st.container():
+        st.markdown("<div class='cookie-overlay-anchor'></div>", unsafe_allow_html=True)
+        c_text, c_actions = st.columns([3.8, 1.2], gap="medium")
         with c_text:
             st.markdown("""
-                <div>
-                    <div class='cookie-popup-title' style='font-size: 1.15rem; font-weight: 700; color: #ffffff; margin-bottom: 3px;'>
-                        We value your privacy
-                    </div>
-                    <div class='cookie-popup-text' style='font-size: 0.82rem; color: #cbd5e1; line-height: 1.45;'>
-                        We use cookies to enhance your browsing experience, maintain language preferences, and ensure seamless classroom translation. 
-                        By clicking "Accept All", you consent to our use of cookies pursuant to India's <b>DPDP Act 2023</b>. 
-                        Learn more in our educational 
-                        <a href='#cookie-policy' style='color: #60a5fa; text-decoration: underline;' title='Read Cookie Policy'>Cookie Policy</a>.
+                <div style='display: flex; align-items: flex-start; gap: 14px;'>
+                    <span style='font-size: 1.6rem; line-height: 1.1;'>🍪</span>
+                    <div style='font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;'>
+                        <b style='color: #f8fafc;'>Privacy & Necessary Cookies Notice:</b>
+                        BhashaSetu processes strictly necessary session tokens for language switching and persona authentication. 
+                        In compliance with India's <b>DPDP Act 2023</b>, voice streams are processed in-memory with <b>zero permanent biometric storage</b> and zero third-party advertising trackers.
                     </div>
                 </div>
             """, unsafe_allow_html=True)
         with c_actions:
-            b1, b2, b3 = st.columns(3, gap="small", vertical_alignment="center")
-            with b1:
-                if st.button("Customise", key="cookie_btn_customise", use_container_width=True, help="Configure cookie preferences"):
-                    st.session_state.nav_page_idx = 4
-                    st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
-                    st.session_state.legal_subtab_idx = 2
-                    st.session_state.legal_nav_ver = st.session_state.get("legal_nav_ver", 0) + 1
-                    st.rerun()
-            with b2:
-                if st.button("Reject All", key="cookie_btn_reject", use_container_width=True, help="Reject optional tracking tokens"):
-                    st.session_state.cookie_consent_acknowledged = True
-                    st.rerun()
-            with b3:
-                if st.button("Accept All", key="cookie_btn_accept", use_container_width=True, help="Accept all session cookies"):
-                    st.session_state.cookie_consent_acknowledged = True
-                    st.rerun()
+            if st.button("Accept Necessary", key="ack_cookies_bottom", use_container_width=True, help="Acknowledge and accept necessary session cookies"):
+                st.session_state.cookie_consent_acknowledged = True
+                st.rerun()
