@@ -14,7 +14,6 @@ from views.faq import render_faq_view
 from views.contact import render_contact_view
 from views.legal import render_legal_view
 from services.assets import get_logo_base64
-from components import inject_interactive_background
 
 # ----------------------------------------------------
 # 1. Page Configuration & Custom CSS 🎨
@@ -35,7 +34,6 @@ def load_css(file_name="style.css"):
 
 
 load_css("style.css")
-inject_interactive_background()
 
 # ----------------------------------------------------
 # 2. Session State & Telemetry Initialization 🗄️
@@ -219,100 +217,6 @@ with foot_col4:
 # ----------------------------------------------------
 if not st.session_state.cookie_consent_acknowledged:
     with st.container(key="cookie_popup_bar"):
-        st.markdown("""
-            <div class='cookie-overlay-anchor'></div>
-            <style>
-            .st-key-cookie_popup_bar,
-            div[data-testid="stVerticalBlockBorderWrapper"]:has(.cookie-overlay-anchor),
-            div[data-testid="stVerticalBlock"]:has(.cookie-overlay-anchor) {
-                position: fixed !important;
-                bottom: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                width: 100vw !important;
-                max-width: 100vw !important;
-                margin: 0 !important;
-                padding: 14px 36px 16px 36px !important;
-                background: #000000 !important;
-                background: rgba(5, 8, 14, 0.98) !important;
-                border-top: 1px solid rgba(255, 255, 255, 0.16) !important;
-                border-left: none !important;
-                border-right: none !important;
-                border-bottom: none !important;
-                border-radius: 0 !important;
-                box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.88) !important;
-                z-index: 999999999 !important;
-                backdrop-filter: blur(16px) !important;
-                -webkit-backdrop-filter: blur(16px) !important;
-            }
-            .st-key-cookie_btn_customise button {
-                background: #0d121d !important;
-                color: #f8fafc !important;
-                border: 1px solid rgba(255, 255, 255, 0.38) !important;
-                border-radius: 6px !important;
-                font-weight: 600 !important;
-                font-size: 0.86rem !important;
-                padding: 6px 12px !important;
-                min-height: 38px !important;
-                transition: all 0.2s ease !important;
-            }
-            .st-key-cookie_btn_customise button:hover {
-                background: rgba(255, 255, 255, 0.12) !important;
-                border-color: rgba(255, 255, 255, 0.7) !important;
-            }
-            .st-key-cookie_btn_reject button {
-                background: #1d4ed8 !important;
-                color: #ffffff !important;
-                border: 1px solid #2563eb !important;
-                border-radius: 6px !important;
-                font-weight: 600 !important;
-                font-size: 0.86rem !important;
-                padding: 6px 12px !important;
-                min-height: 38px !important;
-                transition: all 0.2s ease !important;
-            }
-            .st-key-cookie_btn_reject button:hover {
-                background: #1e40af !important;
-                border-color: #3b82f6 !important;
-            }
-            .st-key-cookie_btn_accept button {
-                background: #2563eb !important;
-                color: #ffffff !important;
-                border: 1px solid #3b82f6 !important;
-                border-radius: 6px !important;
-                font-weight: 600 !important;
-                font-size: 0.86rem !important;
-                padding: 6px 12px !important;
-                min-height: 38px !important;
-                box-shadow: 0 2px 12px rgba(37, 99, 235, 0.4) !important;
-                transition: all 0.2s ease !important;
-            }
-            .st-key-cookie_btn_accept button:hover {
-                background: #1d4ed8 !important;
-                border-color: #60a5fa !important;
-            }
-            @media (prefers-color-scheme: light) {
-                .st-key-cookie_popup_bar,
-                div[data-testid="stVerticalBlockBorderWrapper"]:has(.cookie-overlay-anchor),
-                div[data-testid="stVerticalBlock"]:has(.cookie-overlay-anchor) {
-                    background: rgba(255, 255, 255, 0.98) !important;
-                    border-top: 1px solid rgba(0, 0, 0, 0.12) !important;
-                    box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12) !important;
-                }
-                .cookie-popup-title {
-                    color: #0f172a !important;
-                }
-                .cookie-popup-text {
-                    color: #334155 !important;
-                }
-                .st-key-cookie_btn_customise button {
-                    background: #f1f5f9 !important;
-                    color: #0f172a !important;
-                    border-color: #cbd5e1 !important;
-                }
-            }
-            </style>
-        """, unsafe_allow_html=True)
         c_text, c_actions = st.columns([3.1, 1.4], gap="medium", vertical_alignment="center")
         with c_text:
             st.markdown("""
