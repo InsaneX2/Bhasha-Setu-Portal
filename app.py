@@ -84,16 +84,17 @@ with top_bar_c2:
     cur_lang_idx = avail_langs.index(st.session_state.portal_ui_language) if st.session_state.portal_ui_language in avail_langs else 0
     
     # Minimal compact translator dropdown (small, right-aligned)
-    st.markdown("<div class='minimal-translator-wrap'>", unsafe_allow_html=True)
-    selected_lang = st.selectbox(
-        "🌐 UI Language",
-        avail_langs,
-        index=cur_lang_idx,
-        key="portal_ui_language",
-        label_visibility="collapsed",
-        help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
-    )
-    st.markdown("</div>", unsafe_allow_html=True)
+    st.markdown("<span id='header-lang-marker'></span>", unsafe_allow_html=True)
+    _, c_lang = st.columns([1.1, 1.1])
+    with c_lang:
+        selected_lang = st.selectbox(
+            "🌐 UI Language",
+            avail_langs,
+            index=cur_lang_idx,
+            key="portal_ui_language",
+            label_visibility="collapsed",
+            help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
+        )
     
     if st.session_state.authenticated:
         c_user, c_out = st.columns([1.1, 0.9])
@@ -114,8 +115,8 @@ with top_bar_c2:
                 st.rerun()
     else:
         st.markdown(f"""
-            <div style='text-align: right; margin-top: 6px;'>
-                <span class='status-badge-live'><span class='status-dot'></span> {EDITION} {t('portal_live')}</span>
+            <div style='text-align: right; margin-top: 8px;'>
+                <span class='status-badge-live header-status-badge'><span class='status-dot'></span> {EDITION} {t('portal_live')}</span>
             </div>
         """, unsafe_allow_html=True)
 

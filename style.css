@@ -599,50 +599,78 @@ textarea:focus-visible,
     width: 100%;
 }
 
+div[data-testid="stColumn"]:has(#header-lang-marker) div[data-testid="stSelectbox"],
 .minimal-translator-wrap div[data-testid="stSelectbox"] {
-    width: 180px !important;
-    max-width: 180px !important;
-    min-width: 150px !important;
+    width: 160px !important;
+    max-width: 160px !important;
+    min-width: 135px !important;
     margin-left: auto !important;
     margin-right: 0 !important;
     margin-bottom: 0 !important;
 }
 
+div[data-testid="stColumn"]:has(#header-lang-marker) div[data-testid="stSelectbox"] > div,
 .minimal-translator-wrap div[data-testid="stSelectbox"] > div {
-    min-height: 34px !important;
-    height: 34px !important;
+    min-height: 30px !important;
+    height: 30px !important;
     background: rgba(17, 24, 39, 0.85) !important;
-    border: 1px solid rgba(56, 189, 248, 0.3) !important;
-    border-radius: 10px !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    border-radius: 8px !important;
     padding-left: 8px !important;
-    padding-right: 6px !important;
-    font-size: 0.82rem !important;
+    padding-right: 4px !important;
+    font-size: 0.78rem !important;
     font-weight: 500 !important;
     color: #f1f5f9 !important;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35) !important;
     transition: all 0.25s ease !important;
 }
 
+div[data-testid="stColumn"]:has(#header-lang-marker) div[data-testid="stSelectbox"] > div:hover,
+div[data-testid="stColumn"]:has(#header-lang-marker) div[data-testid="stSelectbox"] > div:focus-within,
 .minimal-translator-wrap div[data-testid="stSelectbox"] > div:hover,
 .minimal-translator-wrap div[data-testid="stSelectbox"] > div:focus-within {
-    border-color: rgba(56, 189, 248, 0.75) !important;
-    box-shadow: 0 0 12px rgba(56, 189, 248, 0.25) !important;
+    border-color: rgba(56, 189, 248, 0.8) !important;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.3) !important;
 }
 
+div[data-testid="stColumn"]:has(#header-lang-marker) div[data-testid="stSelectbox"] svg,
 .minimal-translator-wrap div[data-testid="stSelectbox"] svg {
     fill: #38bdf8 !important;
-    width: 14px !important;
-    height: 14px !important;
+    width: 13px !important;
+    height: 13px !important;
 }
 
+div[data-testid="stColumn"]:has(#header-lang-marker) div[data-baseweb="select"],
 .minimal-translator-wrap div[data-baseweb="select"] {
-    font-size: 0.82rem !important;
+    font-size: 0.78rem !important;
 }
 
+div[data-testid="stColumn"]:has(#header-lang-marker) div[data-testid="stSelectbox"] div[role="combobox"],
 .minimal-translator-wrap div[data-testid="stSelectbox"] div[role="combobox"] {
     padding-top: 0 !important;
     padding-bottom: 0 !important;
-    line-height: 32px !important;
+    line-height: 28px !important;
+}
+
+#header-lang-marker {
+    display: none !important;
+}
+
+/* Header Live Status Badge (Prominent Edition) */
+.header-status-badge {
+    font-size: 1.05rem !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    letter-spacing: 0.015em !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+}
+
+.header-status-badge .status-dot {
+    width: 10px !important;
+    height: 10px !important;
+    box-shadow: 0 0 12px #10b981 !important;
 }
 
 /* ============================================================
