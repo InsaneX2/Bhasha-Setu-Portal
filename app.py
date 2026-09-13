@@ -57,7 +57,7 @@ init_telemetry()
 # ----------------------------------------------------
 # 3. Top Navigation Header 🧭
 # ----------------------------------------------------
-top_bar_c1, top_bar_c2 = st.columns([2.3, 1.2])
+top_bar_c1, top_bar_c2 = st.columns([2.8, 1.4], vertical_alignment="center")
 
 with top_bar_c1:
     logo_icon_b64 = get_logo_base64("icon")
@@ -82,23 +82,27 @@ with top_bar_c1:
 with top_bar_c2:
     avail_langs = get_available_ui_languages()
     cur_lang_idx = avail_langs.index(st.session_state.portal_ui_language) if st.session_state.portal_ui_language in avail_langs else 0
-    selected_lang = st.selectbox(
-        "🌐 UI Language",
-        avail_langs,
-        index=cur_lang_idx,
-        key="portal_ui_language",
-        label_visibility="collapsed",
-        help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
-    )
+    
     if st.session_state.authenticated:
-        c_user, c_out = st.columns([1.1, 0.9])
+        c_user, c_lang, c_out = st.columns([1.1, 1.3, 0.8], vertical_alignment="center")
         with c_user:
             st.markdown(f"""
-                <div style='text-align: right; padding-top: 6px;'>
+                <div style='text-align: right;'>
                     <span class='status-badge-live'><span class='status-dot'></span> {st.session_state.user_role}</span>
                     <div style='font-size: 0.76rem; color: #94a3b8;'>User: <b>{st.session_state.username}</b></div>
                 </div>
             """, unsafe_allow_html=True)
+        with c_lang:
+            st.markdown("<div class='minimal-translator'>", unsafe_allow_html=True)
+            selected_lang = st.selectbox(
+                "🌐 UI Language",
+                avail_langs,
+                index=cur_lang_idx,
+                key="portal_ui_language",
+                label_visibility="collapsed",
+                help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
+            )
+            st.markdown("</div>", unsafe_allow_html=True)
         with c_out:
             if st.button(t("sign_out"), key="top_logout", use_container_width=True, help="Sign out of active persona session"):
                 st.session_state.authenticated = False
@@ -108,11 +112,24 @@ with top_bar_c2:
                 st.session_state.nav_ver = st.session_state.get("nav_ver", 0) + 1
                 st.rerun()
     else:
-        st.markdown(f"""
-            <div style='text-align: right; margin-top: 4px;'>
-                <span class='status-badge-live'><span class='status-dot'></span> {EDITION} {t('portal_live')}</span>
-            </div>
-        """, unsafe_allow_html=True)
+        c_status, c_lang = st.columns([1.0, 1.3], vertical_alignment="center")
+        with c_status:
+            st.markdown(f"""
+                <div style='text-align: right;'>
+                    <span class='status-badge-live'><span class='status-dot'></span> {EDITION} {t('portal_live')}</span>
+                </div>
+            """, unsafe_allow_html=True)
+        with c_lang:
+            st.markdown("<div class='minimal-translator'>", unsafe_allow_html=True)
+            selected_lang = st.selectbox(
+                "🌐 UI Language",
+                avail_langs,
+                index=cur_lang_idx,
+                key="portal_ui_language",
+                label_visibility="collapsed",
+                help="Translate entire portal into tribal dialects (Santali, Gondi, Bhili, etc.) or Indian languages"
+            )
+            st.markdown("</div>", unsafe_allow_html=True)
 
 # Navigation Menu (Tab-based switcher with full vernacular localization)
 nav_labels = [
@@ -213,24 +230,29 @@ with foot_col4:
         st.rerun()
 
 # ----------------------------------------------------
-# 6. Bottom Floating Cookie Consent Overlay (Standard Web Pattern) 🍪
+# 6. Bottom Floating Cookie Consent Popup (Elevated Glass Toast) 🍪
 # ----------------------------------------------------
 if not st.session_state.cookie_consent_acknowledged:
     with st.container():
-        st.markdown("<div class='cookie-overlay-anchor'></div>", unsafe_allow_html=True)
-        c_text, c_actions = st.columns([3.8, 1.2], gap="medium")
+        st.markdown("<div class='cookie-popup-anchor'></div>", unsafe_allow_html=True)
+        c_text, c_actions = st.columns([3.6, 1.2], vertical_alignment="center")
         with c_text:
             st.markdown("""
-                <div style='display: flex; align-items: flex-start; gap: 14px;'>
-                    <span style='font-size: 1.6rem; line-height: 1.1;'>🍪</span>
-                    <div style='font-size: 0.88rem; color: #cbd5e1; line-height: 1.5;'>
-                        <b style='color: #f8fafc;'>Privacy & Necessary Cookies Notice:</b>
-                        BhashaSetu processes strictly necessary session tokens for language switching and persona authentication. 
-                        In compliance with India's <b>DPDP Act 2023</b>, voice streams are processed in-memory with <b>zero permanent biometric storage</b> and zero third-party advertising trackers.
+                <div style='display: flex; align-items: center; gap: 14px;'>
+                    <span style='font-size: 1.8rem; line-height: 1; filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.3));'>🍪</span>
+                    <div>
+                        <div style='font-size: 0.92rem; font-weight: 700; color: #f8fafc; margin-bottom: 2px; display: flex; align-items: center; gap: 8px;'>
+                            Privacy & Necessary Cookies Notice
+                            <span style='font-size: 0.72rem; padding: 2px 8px; border-radius: 9999px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); color: #7dd3fc; font-weight: 600;'>DPDP Act 2023 Compliant</span>
+                        </div>
+                        <div style='font-size: 0.82rem; color: #cbd5e1; line-height: 1.45;'>
+                            BhashaSetu processes strictly necessary session tokens for vernacular switching and persona authentication. 
+                            Voice streams are handled in-memory with <b>zero permanent biometric storage</b> and zero 3rd-party ad trackers.
+                        </div>
                     </div>
                 </div>
             """, unsafe_allow_html=True)
         with c_actions:
-            if st.button("Accept Necessary", key="ack_cookies_bottom", use_container_width=True, help="Acknowledge and accept necessary session cookies"):
+            if st.button("Accept Necessary", key="ack_cookies_bottom", type="primary", use_container_width=True, help="Acknowledge and accept necessary session cookies"):
                 st.session_state.cookie_consent_acknowledged = True
                 st.rerun()
