@@ -167,14 +167,14 @@ with tab_legal:
 # 5. Global Sticky Footer with Legal Links & Disclosures 🌐
 # ----------------------------------------------------
 st.markdown(f"""
-    <div class='portal-footer'>
+    <div class='portal-footer' style='margin-bottom: 24px; padding-bottom: 12px;'>
         <div style='display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;'>
             <div>
                 <b style='color: #e2e8f0;'>{PROJECT_NAME} Platform</b> • {EDITION}
                 <div style='font-size: 0.8rem; color: #94a3b8; margin-top: 3px;'>
                     {t('footer_empower')}
                 </div>
-                <div style='display: flex; gap: 10px; margin-top: 8px; flex-wrap: wrap;'>
+                <div style='display: flex; gap: 10px; margin-top: 10px; margin-bottom: 8px; flex-wrap: wrap;'>
                     <span class='compliance-badge'>🛡️ DPDP Act 2023 Compliant</span>
                     <span class='compliance-badge'>♿ WCAG 2.1 AA Accessible</span>
                     <span class='compliance-badge'>🔒 Zero Biometric Retention</span>

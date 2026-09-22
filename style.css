@@ -506,7 +506,7 @@ textarea:focus-visible,
     color: #f8fafc;
 }
 
-/* Legal Badges */
+/* Legal Badges & Footer Spacing */
 .compliance-badge {
     display: inline-flex;
     align-items: center;
@@ -519,6 +519,13 @@ textarea:focus-visible,
     font-size: 0.78rem;
     font-weight: 600;
 }
+
+.portal-footer {
+    margin-top: 18px;
+    margin-bottom: 24px !important;
+    padding-bottom: 12px;
+}
+
 
 /* ============================================================
    Brand Logo & Emblem Visual Enhancements 🎨
